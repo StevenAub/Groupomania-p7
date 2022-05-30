@@ -5,11 +5,17 @@ module.exports = (sequelize, Datatypes) => {
   const User = sequelize.define(
     "User",
     {
-      id: { type: Datatypes.INTEGER, primaryKey: true, autoIncrement: true },
+      id: {
+        type: Datatypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       email: {
         type: Datatypes.STRING,
         allowNull: false,
-        unique: true
+        unique: {
+          msg: "L'adresse email est deja utilisée!"
+        }
       },
       username: {
         type: Datatypes.STRING,

@@ -5,29 +5,29 @@ module.exports = (sequelize, Datatypes) => {
   const Post = sequelize.define(
     "Post",
     {
-      id: { type: Datatypes.INTEGER, primaryKey: true, autoIncrement: true },
+      id: {
+        type: Datatypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       title: {
         type: Datatypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       content: {
         type: Datatypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       imgUrl: {
         type: Datatypes.STRING,
-        allowNull: true,
-      },
-      userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+        allowNull: true
+      }
     },
     {
       modelName: "Post",
       timestamp: true,
       createdAt: "created",
-      updatedAt: true,
+      updatedAt: true
     }
   );
   return Post;

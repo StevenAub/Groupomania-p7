@@ -1,23 +1,32 @@
 const jwt = require("jsonwebtoken");
+const sequelize = require("../../sequelize");
+const privateKey = "jdjdjddj";
 
 require("dotenv").config();
 
 module.exports = (req, res, next) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodeToken = jwt.verify(token, process.env.TOKEN_SECRET);
-    const userId = decodeToken.userId;
-    req.auth = { userId };
-    if (req.body.userId && req.body.userId !== userId) {
+  const authorizationHeader = req.headers.authorization;
+  console.log(req.headers);
+  if (!authorizationHeader) {
+    return res.status(401).json({
+      message:
+        "Vous n'avez pas fournis de jeton d'authentification. Ajoutez en un dans la requete!"
+    });
+  }
+  const token = authorizationHeader.split(" ")[1];
+  const decodedToken = jwt.verify(token, privateKey, (err, decodedToken) => {
+    if (err) {
       return res.status(401).json({
-        message: "Utilisateur invalide!"
+        message: "L'utilisateur n'est pas autorisé a acceder a cette ressource!"
       });
+    }
+    const userId = decodedToken.userId;
+    if (req.body.userId && req.body.userId !== userId) {
+      res
+        .status(401)
+        .json({ message: "L'identifiant de l'utilisateur est invalide!" });
     } else {
       next();
     }
-  } catch (err) {
-    return res.status(500).json({
-      message: err.message
-    });
-  }
+  });
 };
