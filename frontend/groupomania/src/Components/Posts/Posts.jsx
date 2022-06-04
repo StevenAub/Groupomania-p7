@@ -6,6 +6,8 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useFetch } from "../../Hooks/Hook";
+import { Stack } from "@mui/material";
+import Comment from "../Comments/Comments";
 
 export default function AllPost() {
   const { data, error } = useFetch(`http://localhost:3000/api/post`);
@@ -17,12 +19,15 @@ export default function AllPost() {
   }
 
   return (
-    <div style={{ margin: "auto" }}>
+    <Stack justifyContent="center" alignItems="center" spacing={2}>
       {PostData?.map((post, index) => (
-        <Card key={`${post.title}-${index}`} sx={{ maxWidth: 345 }}>
+        <Card
+          key={`${post.title}-${index}`}
+          sx={{ minWidth: 600, maxWidth: 600, minHeight: 350 }}
+        >
           <CardMedia
             component="img"
-            height="140"
+            height="300"
             image={post.imgUrl}
             alt="green iguana"
           />
@@ -35,11 +40,11 @@ export default function AllPost() {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="small">Share</Button>
-            <Button size="small">Learn More</Button>
+            <Button size="small">Commenter</Button>
+            <Button size="small">Partager</Button>
           </CardActions>
         </Card>
       ))}
-    </div>
+    </Stack>
   );
 }

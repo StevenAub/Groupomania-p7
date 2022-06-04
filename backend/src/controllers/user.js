@@ -26,7 +26,7 @@ function Signup(req, res) {
             username: req.body.username,
             password: hash
           })
-            .then(res.status(201).json({ message: "User crée" }))
+            .then(res.status(201).json({ message: "Utilisateur enregistré" }))
             .catch((err) => res.status(400).json({ error: err }));
         });
       } else {
@@ -59,7 +59,11 @@ function Login(req, res) {
           });
 
           const message = `L'utilisateur a été connecté avec succès`;
-          return res.json({ message, data: user, token });
+
+          //--------------------------------
+
+          //--------------------------------
+          res.status(200).json({ message, data: user, token });
         });
     })
     .catch((error) => {

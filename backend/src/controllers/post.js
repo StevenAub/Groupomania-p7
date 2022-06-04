@@ -8,7 +8,6 @@ function createPost(req, res) {
     const postFile = {
       title: req.body.title,
       content: req.body.content,
-      userId: req.userId,
       imgUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
     };
     Post.create(postFile)
@@ -17,7 +16,6 @@ function createPost(req, res) {
   } else {
     const post = {
       title: req.body.title,
-      userId: req.userId,
       content: req.body.content
     };
     Post.create(post)
@@ -27,22 +25,27 @@ function createPost(req, res) {
       .catch((err) => res.status(500).json({ err }));
   }
 }*/
+
 async function createPost(req, res) {
   try {
-    let imageUrl = "";
+    let imgUrl = "";
     if (req.file) {
-      imageUrl = `${req.protocol}://${req.get("host")}/images/${
+      (imgUrl = `${req.protocol}://${req.get("host")}/images/${
         req.file.filename
-      }`;
+      }`),
+        (title = req.body.title);
     }
     const post = await Post.create({
+      //title: JSON.parse(req.body.posts).title,
+      //  content: JSON.parse(req.body.posts).content,
       title: req.body.title,
-      imgUrl: imageUrl,
-      userId: id
+      content: req.body.content,
+      imgUrl: imgUrl
     });
-    return res.status(200).json(post);
+    console.log(post);
+    return res.status(200).json({ post });
   } catch (error) {
-    return res.status(500).json(error.message);
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -57,7 +60,7 @@ async function getOnePost(req, res) {
 }
 
 async function getAllPost(req, res) {
-  const posts = await Post.findAll()
+  const posts = await Post.findAll({ order: [["id", "DESC"]] })
     .then((posts) => res.status(200).json({ posts }))
     .catch((err) =>
       res

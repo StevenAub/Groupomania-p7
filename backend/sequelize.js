@@ -2,6 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const PostModel = require("./src/models/post");
 const mysql = require("mysql");
 const UserModel = require("./src/models/user");
+const CommentModel = require("./src/models/comment");
 
 const sequelize = new Sequelize("groupomania", "root", "", {
   host: "localhost",
@@ -16,8 +17,11 @@ sequelize
 
 const Post = PostModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
+const Comment = CommentModel(sequelize, DataTypes);
 sequelize
   .sync()
-  .then(() => console.log("Les tables User et Post ont été ajouté a la BDD"));
+  .then(() =>
+    console.log("Les tables User, Post, Comment ont été ajouté a la BDD")
+  );
 
 module.exports = sequelize;
