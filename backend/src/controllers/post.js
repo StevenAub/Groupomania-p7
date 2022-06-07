@@ -1,6 +1,6 @@
 const sequelize = require("../../sequelize");
 const Post = sequelize.models.Post;
-
+const User = sequelize.models.User;
 const fs = require("fs");
 /*
 function createPost(req, res) {
@@ -27,6 +27,8 @@ function createPost(req, res) {
 }*/
 
 async function createPost(req, res) {
+  console.log("auth" + req.auth);
+
   try {
     let imgUrl = "";
     if (req.file) {
@@ -40,7 +42,9 @@ async function createPost(req, res) {
       //  content: JSON.parse(req.body.posts).content,
       title: req.body.title,
       content: req.body.content,
-      imgUrl: imgUrl
+      imgUrl: imgUrl,
+      UserId: req.auth,
+      PostId: parseInt(req.params.id)
     });
     console.log(post);
     return res.status(200).json({ post });
@@ -51,6 +55,8 @@ async function createPost(req, res) {
 
 async function getOnePost(req, res) {
   const id = req.params.id;
+  console.log(id);
+  console.log(req.auth);
   const GetPost = await Post.findOne({ where: { id: id } });
   if (GetPost === null) {
     res.status(404).json({ message: "Post introuvable!" });
@@ -98,26 +104,35 @@ function modifyPost(req, res) {
     });
 }
 
-function deletePost(req, res) {
-  Post.findByPk(req.params.id).then((post) => {
-    console.log(post);
-    if (post === null) {
-      return res.status(404).json({ message: "Le post demandé n'existe pas!" });
-    }
-    return Post.destroy({ where: { id: post.id } })
-      .then((_) => {
-        res
-          .status(200)
-          .json({ message: `Le post ${post.title} à bien été supprimé!` });
-      })
-      .catch((error) => {
-        res.status(500).json({
-          message:
-            "Le post n'a pas pu etre supprimé, Réessayez dans quelques instants!",
-          erreur: err
+async function deletePost(req, res) {
+  const post = await Post.findOne({ where: { id: req.params.id } });
+  const user = await User.findOne({ where: { id: req.auth } });
+  if (post.UserId === req.auth)
+    Post.findByPk(req.params.id).then((post) => {
+      console.log(post);
+      if (post === null) {
+        return res
+          .status(404)
+          .json({ message: "Le post demandé n'existe pas!" });
+      }
+      return Post.destroy({ where: { id: post.id } })
+        .then((_) => {
+          res
+            .status(200)
+            .json({ message: `Le post ${post.title} à bien été supprimé!` });
+        })
+        .catch((error) => {
+          res.status(500).json({
+            message:
+              "Le post n'a pas pu etre supprimé, Réessayez dans quelques instants!",
+            erreur: err
+          });
         });
-      });
-  });
+    });
+}
+
+function AllPostUser(req, res) {
+  console.log("coucouc");
 }
 
 module.exports = {
@@ -125,5 +140,6 @@ module.exports = {
   createPost,
   getOnePost,
   deletePost,
-  modifyPost
+  modifyPost,
+  AllPostUser
 };

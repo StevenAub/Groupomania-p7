@@ -24,7 +24,9 @@ function Signup(req, res) {
           User.create({
             email: req.body.email,
             username: req.body.username,
-            password: hash
+            password: hash,
+            imgProfil:
+              "https://thierrydambermont.wordpress.com/2016/05/11/marine-beltus-marine_be_-twitter/"
           })
             .then(res.status(201).json({ message: "Utilisateur enregistré" }))
             .catch((err) => res.status(400).json({ error: err }));
@@ -45,7 +47,7 @@ function Login(req, res) {
         const message = `L'utilisateur demandé n'existe pas.`;
         return res.status(404).json({ message });
       }
-
+      console.log("user" + user.id);
       return bcrypt
         .compare(req.body.password, user.password)
         .then((isPasswordValid) => {
@@ -54,10 +56,15 @@ function Login(req, res) {
             return res.status(401).json({ message });
           }
 
-          const token = jwt.sign({ userId: user.id }, privateKey, {
-            expiresIn: "24h"
-          });
-
+          const token = jwt.sign(
+            { userId: user.id, username: user.username },
+            privateKey,
+            {
+              expiresIn: "24h"
+            }
+          );
+          console.log("token" + token);
+          req.auth = user.id;
           const message = `L'utilisateur a été connecté avec succès`;
 
           //--------------------------------

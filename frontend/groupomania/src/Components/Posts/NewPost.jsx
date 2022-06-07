@@ -5,13 +5,23 @@ const url = "http://localhost:3000/api/post";
 //const token = JSON.parse(localStorage.getItem("tokens"));
 
 const DivContainair = styled.div`
+  background-color: grey;
   padding: 30px;
-
   align-items: center;
-  border: 1px blue solid;
+  max-width: 50%;
+  margin: auto;
 `;
-
+const DivInput = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const InputTitle = styled.textarea`
+  margin: 2% 0px;
+  rows: 400;
+`;
 function NewPost() {
+  const token = JSON.parse(localStorage.getItem("tokens"));
+
   const [post, setPost] = useState({ title: "", content: "" });
   const [file, setFile] = useState();
   const [image, setImage] = useState(null);
@@ -29,8 +39,6 @@ function NewPost() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
     if (file) {
       const Formdata = new FormData();
       Formdata.append("title", post.title);
@@ -46,7 +54,8 @@ function NewPost() {
 
         headers: {
           Accept: "application/json",
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
+          authorization: `Bearer ${token}`
         }
       })
         .then(function (response) {
@@ -62,7 +71,10 @@ function NewPost() {
         method: "post",
         url: url,
         data: post,
-        headers: { "Content-Type": "application/json" }
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`
+        }
       })
         .then(function (response) {
           //handle success
@@ -74,25 +86,26 @@ function NewPost() {
         });
     }
   };
-
+  console.log(post);
   return (
     <DivContainair>
-      <input
-        type="text"
-        name="title"
-        placeholder="Titre"
-        onInput={onChange}
-        value={post.title}
-      />
+      <DivInput>
+        <InputTitle
+          type="text"
+          name="title"
+          placeholder="Titre"
+          onInput={onChange}
+          value={post.title}
+        />
 
-      <textarea
-        type="text"
-        name="content"
-        placeholder="Text(optional)"
-        onInput={onChange}
-        value={post.content}
-      />
-
+        <textarea
+          type="text"
+          name="content"
+          placeholder="Text(optional)"
+          onInput={onChange}
+          value={post.content}
+        />
+      </DivInput>
       <input
         type="file"
         id="imgUrl"

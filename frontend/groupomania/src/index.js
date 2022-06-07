@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
+import OnePost from "./Components/Posts/OnePost";
+
 //import Inscription from "./Components/Inscription/Inscription";
 //import NewPost from "./Components/Posts/NewPost";
 
@@ -18,6 +20,9 @@ root.render(
       </Routes>
       <Routes>
         <Route path="/home" element={<App />} />
+      </Routes>
+      <Routes>
+        <Route path="/home/post/:id" element={<OnePost />} />
       </Routes>
     </Router>
   </React.StrictMode>

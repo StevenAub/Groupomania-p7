@@ -18,6 +18,14 @@ sequelize
 const Post = PostModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
 const Comment = CommentModel(sequelize, DataTypes);
+
+Post.hasMany(Comment);
+Comment.belongsTo(Post);
+User.hasMany(Post);
+Post.belongsTo(User);
+Comment.belongsTo(User);
+User.hasMany(Comment);
+
 sequelize
   .sync()
   .then(() =>

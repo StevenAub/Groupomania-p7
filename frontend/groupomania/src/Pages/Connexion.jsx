@@ -38,8 +38,6 @@ function Connexion() {
 
   const onChange = ({ target: { name, value } }) => {
     setForm((form) => ({ ...form, [name]: value }));
-
-    console.log(form);
   };
 
   const userData = async () => {
@@ -58,13 +56,17 @@ function Connexion() {
           const MsgData = responseData.message;
           formError.textContent = MsgData;
         } else {
-          const token = responseData.token;
-          localStorage.setItem("tokens", JSON.stringify(token));
+          console.log(responseData);
 
+          const token = responseData.token;
+          const username = responseData.data.username;
+
+          localStorage.setItem("tokens", JSON.stringify(token));
+          localStorage.setItem("username", JSON.stringify(username));
+
+          console.log(token);
           window.location = "/home";
         }
-
-        //const token = responseData.token;
       })
       .catch((error) => {
         console.log(error);
@@ -107,6 +109,7 @@ function Connexion() {
               variant="outlined"
               onInput={onChange}
               name="password"
+              type="password"
               value={form.password}
             />
           </Box>
@@ -138,8 +141,6 @@ function Inscription() {
 
   const onChange = ({ target: { name, value } }) => {
     setForm((form) => ({ ...form, [name]: value }));
-
-    console.log(form);
   };
 
   const userData = async () => {
@@ -203,6 +204,7 @@ function Inscription() {
             />
             <TextField
               id="outlined-basic"
+              type="password"
               label="Mot de passe"
               variant="outlined"
               onInput={onChange}

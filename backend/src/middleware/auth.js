@@ -6,7 +6,7 @@ require("dotenv").config();
 
 module.exports = (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
-  console.log(req.headers);
+
   if (!authorizationHeader) {
     return res.status(401).json({
       message:
@@ -21,11 +21,13 @@ module.exports = (req, res, next) => {
       });
     }
     const userId = decodedToken.userId;
+
     if (req.body.userId && req.body.userId !== userId) {
       res
         .status(401)
         .json({ message: "L'identifiant de l'utilisateur est invalide!" });
     } else {
+      req.auth = userId;
       next();
     }
   });

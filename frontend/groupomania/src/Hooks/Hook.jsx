@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 
 export function useFetch(url) {
+  const token = JSON.parse(localStorage.getItem("tokens"));
+
   const [data, setData] = useState({});
   const [error, setError] = useState(false);
-  const token = JSON.parse(localStorage.getItem("tokens"));
 
   useEffect(() => {
     if (!url) return;
@@ -27,5 +28,3 @@ export function useFetch(url) {
   }, [url, token]);
   return { data, error };
 }
-/*
- */
