@@ -12,7 +12,7 @@ const StyledImg = styled.img`
 const StyledDiv = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(248, 17, 17, 0.1);
+  background-color: #ffd7d7;
   height: 5em;
 `;
 const StyledInput = styled.input`

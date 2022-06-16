@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export function useFetch(url) {
   const token = JSON.parse(localStorage.getItem("tokens"));
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,6 @@ export function useFetch(url) {
         const data = await response.json();
         setData(data);
       } catch (err) {
-        console.log(err);
         setError(true);
       }
     }
@@ -28,3 +27,26 @@ export function useFetch(url) {
   }, [url, token]);
   return { data, error };
 }
+/*
+const token = JSON.parse(localStorage.getItem("tokens"));
+
+export function getList() {
+  return fetch("http://localhost:3000/api/post", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  }).then((data) => data.json());
+}
+
+export function setItem(item) {
+  return fetch("http://localhost:3000/api/post", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ item })
+  }).then((data) => data.json());
+}
+*/

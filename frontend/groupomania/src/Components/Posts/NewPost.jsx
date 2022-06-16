@@ -1,4 +1,4 @@
-import { useState } from "react";
+/*import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 const url = "http://localhost:3000/api/post";
@@ -39,6 +39,7 @@ function NewPost() {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     if (file) {
       const Formdata = new FormData();
       Formdata.append("title", post.title);
@@ -86,37 +87,40 @@ function NewPost() {
         });
     }
   };
-  console.log(post);
-  return (
-    <DivContainair>
-      <DivInput>
-        <InputTitle
-          type="text"
-          name="title"
-          placeholder="Titre"
-          onInput={onChange}
-          value={post.title}
-        />
 
-        <textarea
-          type="text"
-          name="content"
-          placeholder="Text(optional)"
-          onInput={onChange}
-          value={post.content}
+  return (
+    <div>
+      <DivContainair>
+        <DivInput>
+          <InputTitle
+            type="text"
+            name="title"
+            placeholder="Titre"
+            onInput={onChange}
+            value={post.title}
+          />
+
+          <textarea
+            type="text"
+            name="content"
+            placeholder="Text(optional)"
+            onInput={onChange}
+            value={post.content}
+          />
+        </DivInput>
+        <input
+          type="file"
+          id="imgUrl"
+          name="imgUrl"
+          accept="image/png, image/jpeg, image/jpg"
+          onInput={(event) => onChangeImage(event)}
+          value={post.imgUrl}
         />
-      </DivInput>
-      <input
-        type="file"
-        id="imgUrl"
-        name="imgUrl"
-        accept="image/png, image/jpeg, image/jpg"
-        onInput={(event) => onChangeImage(event)}
-        value={post.imgUrl}
-      />
-      <button onClick={handleSubmit}>Publier</button>
-    </DivContainair>
+        <button onClick={handleSubmit}>Publier</button>
+      </DivContainair>
+    </div>
   );
 }
 
 export default NewPost;
+*/

@@ -1,6 +1,6 @@
-import { WindowSharp } from "@mui/icons-material";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 export default function DeletePost() {
   const token = JSON.parse(localStorage.getItem("tokens"));
@@ -18,7 +18,7 @@ export default function DeletePost() {
 
   return (
     <div>
-      <p onClick={Delete}>Supprimer le post</p>
+      <Button onClick={Delete}>❌ Supprimer le post</Button>
     </div>
   );
 }

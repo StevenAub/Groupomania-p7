@@ -59,12 +59,8 @@ function Connexion() {
           console.log(responseData);
 
           const token = responseData.token;
-          const username = responseData.data.username;
-
           localStorage.setItem("tokens", JSON.stringify(token));
-          localStorage.setItem("username", JSON.stringify(username));
 
-          console.log(token);
           window.location = "/home";
         }
       })

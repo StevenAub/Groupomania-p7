@@ -3,6 +3,7 @@ const sequelize = require("../../sequelize");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = sequelize.models.User;
+const Post = sequelize.models.Post;
 const privateKey = "jdjdjddj";
 
 function Signup(req, res) {
@@ -65,8 +66,9 @@ function Login(req, res) {
           );
           console.log("token" + token);
           req.auth = user.id;
+          req.username = user.username;
           const message = `L'utilisateur a été connecté avec succès`;
-
+          console.log("req.auth" + req.username);
           //--------------------------------
 
           //--------------------------------
@@ -79,36 +81,46 @@ function Login(req, res) {
     });
 }
 
-/*
-function Login(req, res) {
-  const email = req.body.email;
-  const password = req.body.password;
-  sequelize.models.User.findOne({
-    where: { email: email }
-  }).then(async (user) => {
-    if (!user) {
-      res.status(404).json({ message: "Utilisateur non trouvé!" });
-    } else {
-      bcrypt
-        .compare(password, user.password)
-        .then((controlPassword) => {
-          if (controlPassword === false) {
-            return res.status(403).json({ message: "Mot de passe incorrect!" });
-          } else {
-            const token = jwt.sign({ userId: user.id }, "RANDOM TOKEN SECRET", {
-              expiresIn: "12h"
-            });
-            console.log(user);
-            res.status(200).json({
-              message: "utilisateur connécté!",
-              userId: user.id,
-              token
-            });
-          }
-        })
-        .catch((err) => res.status(500).json({ message: err.message }));
-    }
-  });
-}*/
+async function getAllUsers(req, res) {
+  const users = await User.findAll({ order: [["id", "DESC"]] })
+    .then((users) => res.status(200).json({ users }))
+    .catch((err) =>
+      res.status(404).json({
+        message: "Aucun utilisateur disponnible actuellement!",
+        erreur: err
+      })
+    );
+}
 
-module.exports = { Signup, Login };
+async function getOneUser(req, res) {
+  const id = req.params.id;
+  console.log(id);
+  const GetUser = await User.findOne({ where: { id: id } });
+
+  if (GetUser === null) {
+    res.status(404).json({ message: "User introuvable!" });
+  } else {
+    res.status(200).json({ GetUser });
+  }
+}
+async function getPostUserId(req, res) {
+  const id = req.params.id;
+  const GetPost = await Post.findAll({ where: { UserId: id } });
+  if (GetPost === null) {
+    res.status(404).json({ message: "User introuvable!" });
+  } else {
+    res.status(200).json({ GetPost });
+  }
+}
+async function modifyUser(req, res) {}
+async function deleteUser(req, res) {}
+
+module.exports = {
+  Signup,
+  Login,
+  getAllUsers,
+  getOneUser,
+  modifyUser,
+  deleteUser,
+  getPostUserId
+};

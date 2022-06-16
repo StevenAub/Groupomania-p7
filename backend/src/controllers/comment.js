@@ -29,7 +29,12 @@ async function getAllComment(req, res) {
   const id = req.params.id;
   const GetComment = await Comment.findAll({
     where: { PostId: id },
-    order: [["updatedAt", "DESC"]]
+    include: [
+      {
+        model: User,
+        attributes: ["username", "imgProfil"]
+      }
+    ]
   });
   if (GetComment === null) {
     res.status(404).json({ message: "Commentaire introuvable!" });

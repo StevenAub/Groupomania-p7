@@ -8,6 +8,7 @@ const cors = require("cors");
 const path = require("path");
 const userRoutes = require("./src/routes/user");
 const stuffRoutes = require("./src/routes/post");
+const likeRoutes = require("./src/routes/like");
 const auth = require("./src/middleware/auth");
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -29,7 +30,8 @@ app.use(cookieParser());
 //Routes
 
 app.use("/api/auth", userRoutes);
-
+app.use("/api/user", userRoutes);
 app.use("/api/post", stuffRoutes);
+app.use("/api/like", likeRoutes);
 
 module.exports = app;
