@@ -15,6 +15,8 @@ import { Button, CardActionArea, CardActions } from "@mui/material";
 import Comment from "../Comments/Comments";
 
 export default function GetUser() {
+  const token = JSON.parse(localStorage.getItem("tokens"));
+
   const idRequest = useParams();
   const id = idRequest.id;
   const [user, setUser] = useState("");
@@ -22,7 +24,8 @@ export default function GetUser() {
   useEffect(() => {
     axios
       .get(`http://localhost:3000/api/user/${id}`, {
-        method: "GET"
+        method: "GET",
+        headers: { authorization: `Bearer ${token}` }
       })
       .then((res) => {
         setUser(res.data.GetUser);
@@ -33,7 +36,8 @@ export default function GetUser() {
   useEffect(() => {
     axios
       .get(`http://localhost:3000/api/user/${id}/post`, {
-        method: "GET"
+        method: "GET",
+        headers: { authorization: `Bearer ${token}` }
       })
       .then((res) => {
         setPosts(res.data.GetPost);
@@ -48,16 +52,35 @@ export default function GetUser() {
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center"
+          alignItems: "center",
+          backgroundColor: "rgba(78, 81, 102, 0.6)"
         }}
       >
-        <Stack direction="row" spacing={2}>
-          <Avatar alt={user.username} src={imgProfil} />
-          <h2>{user.username}</h2>
+        <Stack direction="row" spacing={2} style={{ margin: "15px" }}>
+          <Avatar
+            alt={user.username}
+            src={user.imgProfil}
+            sx={{ width: 100, height: 100 }}
+          />
+          <h1 style={{ borderBottom: "solid 1px black" }}>{user.username}</h1>
         </Stack>
 
         {posts?.map((post, index) => (
-          <Card sx={{ maxWidth: 450 }} key={`${post.title}-${index}`}>
+          <Card
+            sx={{
+              width: 750,
+              maxWidth: 750,
+              minWidth: 200,
+              marginTop: 5
+            }}
+            key={`${post.title}-${index}`}
+            style={{
+              backgroundColor: "white",
+              borderRadius: "10px",
+              border: "solid 1px #4E5166 ",
+              boxShadow: "5px 5px 5px #4E5166"
+            }}
+          >
             <CardActionArea>
               <CardMedia
                 component="img"

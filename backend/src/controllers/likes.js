@@ -7,7 +7,6 @@ async function findAllLikes(req, res, next) {
   const post = await Post.findOne({ where: { id: req.params.id } });
   const user = await User.findOne({ where: { id: req.auth } });
 
-  console.log(post.id);
   const GetLike = await Like.findAll({
     where: {
       PostId: post.id

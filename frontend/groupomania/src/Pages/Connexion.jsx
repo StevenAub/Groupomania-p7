@@ -56,11 +56,9 @@ function Connexion() {
           const MsgData = responseData.message;
           formError.textContent = MsgData;
         } else {
-          console.log(responseData);
-
           const token = responseData.token;
           localStorage.setItem("tokens", JSON.stringify(token));
-
+          localStorage.setItem("UserId", JSON.stringify(responseData.data.id));
           window.location = "/home";
         }
       })

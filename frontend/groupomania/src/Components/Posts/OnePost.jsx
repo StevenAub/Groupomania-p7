@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import ModifyPost from "./ModifyPost";
 import Avatar from "@mui/material/Avatar";
 import imgProfil from "../../Assets/profil.jpg";
+import LikePost from "../Like/Likes";
 const StyledDivComment = styled.div`
   display: flex;
   flex-direction: column;
@@ -23,7 +24,10 @@ function GetOnedata() {
   const id = useParams();
 
   const token = JSON.parse(localStorage.getItem("tokens"));
+
+  const userId = JSON.parse(localStorage.getItem("UserId"));
   const [post, setPost] = useState({});
+  console.log(userId);
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/post/${id.id}`, {
@@ -104,10 +108,14 @@ function GetOnedata() {
                 <Typography variant="body2" color="text.secondary">
                   {post.content}
                 </Typography>{" "}
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <ModifyPost />
-                  <DeletePost />
-                </div>
+                {post.UserId === userId ? (
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <ModifyPost />
+                    <DeletePost />
+                  </div>
+                ) : (
+                  <div></div>
+                )}
               </CardContent>
             </div>
           </Card>

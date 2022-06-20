@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const User = sequelize.models.User;
 const Post = sequelize.models.Post;
 const privateKey = "jdjdjddj";
+const multer = require("multer");
+const fs = require("fs");
 
 function Signup(req, res) {
   const email = req.body.email;
@@ -68,10 +70,6 @@ function Login(req, res) {
           req.auth = user.id;
           req.username = user.username;
           const message = `L'utilisateur a été connecté avec succès`;
-          console.log("req.auth" + req.username);
-          //--------------------------------
-
-          //--------------------------------
           res.status(200).json({ message, data: user, token });
         });
     })
@@ -112,8 +110,81 @@ async function getPostUserId(req, res) {
     res.status(200).json({ GetPost });
   }
 }
-async function modifyUser(req, res) {}
-async function deleteUser(req, res) {}
+
+async function modifyUser(req, res) {
+  const id = req.params.id;
+
+  const user = await User.findOne({ where: { id: id } });
+  const username = req.body.username;
+  const email = req.body.email;
+  const password = req.body.password;
+  const imgProfil = req.body.imgProfil;
+
+  const userTest = { ...req.body };
+  console.log({ ...req.body });
+  console.log(username);
+  if (password) {
+    bcrypt.hash(req.body.password, 10).then((hash) => {
+      user.update({ password: hash });
+    });
+  }
+  user
+    .update({
+      username: userTest.username || undefined,
+      email: userTest.email || undefined
+    })
+    .then(() => res.status(200).json({ message: "User modifié", user }))
+    .catch((error) => res.status(404).json({ error }));
+}
+
+async function modifyImageUser(req, res) {
+  const id = req.params.id;
+  const user = await User.findOne({ where: { id: id } });
+  const filename = user.imgProfil.split("/images/")[1];
+
+  fs.unlink(`images/${filename}`, () => {
+    if (req.file) {
+      img = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+      console.log(img);
+
+      user
+        .update({
+          imgProfil: img
+        })
+        .then(() => res.status(200).json({ message: "User modifié", user }))
+        .catch((error) => res.status(404).json({ error }));
+    }
+  });
+}
+async function deleteUser(req, res) {
+  const post = await Post.findOne({ where: { id: req.params.id } });
+  const user = await User.findOne({ where: { UserId: req.auth } });
+  if (user.id === req.auth)
+    User.findByPk(req.params.id).then((user) => {
+      console.log(user);
+      if (user === null) {
+        return res
+          .status(404)
+          .json({ message: "L'utilisateur demandé n'existe pas!" });
+      }
+      const filename = user.imgProfil.split("/images/")[1];
+      fs.unlink(`images/${filename}`, () => {
+        User.destroy({ where: { id: user.id } })
+          .then((_) => {
+            res.status(200).json({
+              message: `Le post ${user.username} à bien été supprimé!`
+            });
+          })
+          .catch((error) => {
+            res.status(500).json({
+              message:
+                "L'utilisateur n'a pas pu etre supprimé, Réessayez dans quelques instants!",
+              erreur: err
+            });
+          });
+      });
+    });
+}
 
 module.exports = {
   Signup,
@@ -122,5 +193,6 @@ module.exports = {
   getOneUser,
   modifyUser,
   deleteUser,
-  getPostUserId
+  getPostUserId,
+  modifyImageUser
 };
