@@ -4,42 +4,49 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = sequelize.models.User;
 const Post = sequelize.models.Post;
+const Comment = sequelize.models.Comment;
 const privateKey = "jdjdjddj";
-const multer = require("multer");
 const fs = require("fs");
+var validator = require("email-validator");
 
 function Signup(req, res) {
   const email = req.body.email;
   const username = req.body.username;
   const password = req.body.password;
-
-  if (!email || !username || !password) {
-    return res
-      .status(400)
-      .json({ message: "Veuillez renseigner tous les champs!" });
+  if (!validator.validate(email)) {
+    res.status(500).json({ message: "Addresse email invalide" });
   } else {
-    User.findOne({
-      attributes: ["email"],
-      where: { email: email }
-    }).then(function (userFind) {
-      if (!userFind) {
-        bcrypt.hash(req.body.password, 10).then((hash) => {
-          User.create({
-            email: req.body.email,
-            username: req.body.username,
-            password: hash,
-            imgProfil:
-              "https://thierrydambermont.wordpress.com/2016/05/11/marine-beltus-marine_be_-twitter/"
-          })
-            .then(res.status(201).json({ message: "Utilisateur enregistré" }))
-            .catch((err) => res.status(400).json({ error: err }));
-        });
-      } else {
-        return res
-          .status(400)
-          .json({ message: "Addresse email deja utilisée!" });
-      }
-    });
+    if (!email || !username || !password) {
+      return res
+        .status(400)
+        .json({ message: "Veuillez renseigner tous cles champs!" });
+    } else {
+      User.findOne({
+        attributes: ["email"],
+        where: { email: email }
+      }).then(function (userFind) {
+        if (!userFind) {
+          bcrypt.hash(req.body.password, 10).then((hash) => {
+            User.create({
+              email: req.body.email,
+              username: req.body.username,
+              password: hash,
+              imgProfil: ""
+            })
+              .then(
+                res.status(201).json({
+                  message: "Utilisateur enregistré, vous pouvez vous connecter"
+                })
+              )
+              .catch((err) => res.status(400).json({ error: err }));
+          });
+        } else {
+          return res
+            .status(400)
+            .json({ message: "Addresse email deja utilisée!" });
+        }
+      });
+    }
   }
 }
 
@@ -60,7 +67,7 @@ function Login(req, res) {
           }
 
           const token = jwt.sign(
-            { userId: user.id, username: user.username },
+            { userId: user.id, username: user.username, admin: user.isAdmin },
             privateKey,
             {
               expiresIn: "24h"
@@ -110,15 +117,17 @@ async function getPostUserId(req, res) {
     res.status(200).json({ GetPost });
   }
 }
+async function DeletePostCommentUserId(req, res) {
+  await Post.destroy({ where: { UserId: req.auth } });
+  await Comment.destroy({ where: { UserId: req.auth } });
+}
 
 async function modifyUser(req, res) {
   const id = req.params.id;
 
   const user = await User.findOne({ where: { id: id } });
   const username = req.body.username;
-  const email = req.body.email;
   const password = req.body.password;
-  const imgProfil = req.body.imgProfil;
 
   const userTest = { ...req.body };
   console.log({ ...req.body });
@@ -158,7 +167,7 @@ async function modifyImageUser(req, res) {
 }
 async function deleteUser(req, res) {
   const post = await Post.findOne({ where: { id: req.params.id } });
-  const user = await User.findOne({ where: { UserId: req.auth } });
+  const user = await User.findOne({ where: { id: req.auth } });
   if (user.id === req.auth)
     User.findByPk(req.params.id).then((user) => {
       console.log(user);
@@ -172,7 +181,7 @@ async function deleteUser(req, res) {
         User.destroy({ where: { id: user.id } })
           .then((_) => {
             res.status(200).json({
-              message: `Le post ${user.username} à bien été supprimé!`
+              message: `L'utilisateur' ${user.username} à bien été supprimé!`
             });
           })
           .catch((error) => {
@@ -194,5 +203,6 @@ module.exports = {
   modifyUser,
   deleteUser,
   getPostUserId,
+  DeletePostCommentUserId,
   modifyImageUser
 };

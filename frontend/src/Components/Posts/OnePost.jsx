@@ -5,15 +5,14 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Stack } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Comment from "../Comments/Comments";
 import styled from "styled-components";
 import DeletePost from "./DeletePost";
 import { useState, useEffect } from "react";
 import ModifyPost from "./ModifyPost";
 import Avatar from "@mui/material/Avatar";
-import imgProfil from "../../Assets/profil.jpg";
-import LikePost from "../Like/Likes";
+
 const StyledDivComment = styled.div`
   display: flex;
   flex-direction: column;
@@ -30,7 +29,7 @@ function GetOnedata() {
   console.log(userId);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/post/${id.id}`, {
+    fetch(`http://localhost:8080/api/post/${id.id}`, {
       headers: { authorization: `Bearer ${token}` }
     })
       .then((response) => response.json())
@@ -38,15 +37,24 @@ function GetOnedata() {
   }, [id.id, token]);
 
   const username = post.User?.username;
+  const imgProfil = post.User?.imgProfil;
+
   return (
     <div>
       <Header />
       <div
-        style={{ backgroundColor: "rgba(78, 81, 102, 0.6)", paddingTop: "2%" }}
+        style={{
+          paddingTop: "2%",
+          margin: "0px 5%"
+        }}
       >
         <Stack justifyContent="center" alignItems="center" spacing={2}>
           <Card
-            sx={{ width: 750, maxWidth: 750, minWidth: 200, marginTop: 5 }}
+            sx={{
+              width: "100%",
+              maxWidth: 950,
+              margin: 10
+            }}
             style={{
               backgroundColor: "white",
               borderRadius: "10px",
@@ -55,48 +63,50 @@ function GetOnedata() {
             }}
           >
             <CardContent>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                style={{
-                  display: "flex",
-                  margin: "10px 10px 30px 10px"
-                }}
-              >
-                <Avatar
-                  alt="dkkd"
+              {" "}
+              <Link to={`/home/user/${post.UserId}`}>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
                   style={{
-                    marginRight: "10px"
-                  }}
-                  src={imgProfil}
-                />
-                <h3
-                  style={{
-                    margin: "0",
                     display: "flex",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    color: "#4E5166"
-                  }}
-                  onClick={() => {
-                    window.location = `/home/user/${post.UserId}`;
+                    margin: "10px 10px 30px 10px"
                   }}
                 >
-                  {username}
-                </h3>
-              </Typography>
+                  <Avatar
+                    alt="dkkd"
+                    style={{
+                      marginRight: "10px"
+                    }}
+                    src={imgProfil}
+                  />
+                  <h3
+                    style={{
+                      margin: "0",
+                      display: "flex",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      color: "#4E5166"
+                    }}
+                  >
+                    {username}
+                  </h3>
+                </Typography>{" "}
+              </Link>
             </CardContent>
             <div>
               {post.imgUrl ? (
                 <CardMedia
-                  style={{
-                    objectFit: "contain"
-                  }}
                   component="img"
-                  height="300"
                   image={post.imgUrl}
                   alt="green iguana"
+                  style={{
+                    objectFit: "contain",
+                    width: "99%",
+                    margin: "auto",
+                    cursor: "pointer"
+                  }}
                 />
               ) : (
                 <div></div>
@@ -108,7 +118,7 @@ function GetOnedata() {
                 <Typography variant="body2" color="text.secondary">
                   {post.content}
                 </Typography>{" "}
-                {post.UserId === userId ? (
+                {post.UserId === userId.userId ? (
                   <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <ModifyPost />
                     <DeletePost />

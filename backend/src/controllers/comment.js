@@ -1,28 +1,22 @@
 const sequelize = require("../../sequelize");
 const Comment = sequelize.models.Comment;
 const User = sequelize.models.User;
-const Post = sequelize.models.Post;
-
-const fs = require("fs");
 
 async function createComment(req, res) {
-  if (req.body.content === "") {
-    console.log("Merci de remplir le champs");
-  }
   const createComment = await Comment.create({
-    ...req.body,
     content: req.body.content,
     UserId: req.auth,
     PostId: parseInt(req.params.id)
   });
 
-  console.log(createComment);
   createComment
     .save()
     .then(() =>
       res.status(201).json({ message: "Le commentaire a été ajouté" })
     )
-    .catch((error) => res.status(404).json({ error }));
+    .catch((error) =>
+      res.status(500).json({ message: "Merci de remplir les champs", error })
+    );
 }
 
 async function getAllComment(req, res) {
@@ -39,14 +33,19 @@ async function getAllComment(req, res) {
   if (GetComment === null) {
     res.status(404).json({ message: "Commentaire introuvable!" });
   } else {
-    console.log(GetComment);
     res.status(200).json({ GetComment });
   }
 }
 
 function modifyComment(req, res) {}
 
-function deleteComment(req, res) {}
+async function deleteComment(req, res) {
+  Comment.destroy({ where: { id: req.params.id } })
+    .then(() =>
+      res.status(200).json({ message: "Le commentaire a été supprimé !" })
+    )
+    .catch((error) => res.status(400).json({ error }));
+}
 
 module.exports = {
   getAllComment,

@@ -1,6 +1,3 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("sqlite::memory:");
-
 module.exports = (sequelize, Datatypes) => {
   const Comment = sequelize.define(
     "Comment",
@@ -12,7 +9,7 @@ module.exports = (sequelize, Datatypes) => {
       },
       content: {
         type: Datatypes.STRING,
-        allowNull: false
+        allowNull: true
       }
     },
     {

@@ -19,7 +19,7 @@ async function createPost(req, res) {
     const post = await Post.create({
       title: req.body.title,
       content: req.body.content,
-      imgUrl: imgUrl,
+      imgUrl,
       UserId: req.auth,
       PostId: parseInt(req.params.id)
     });
@@ -51,7 +51,7 @@ async function getOnePost(req, res) {
 }
 
 async function getAllPost(req, res) {
-  const posts = await Post.findAll({
+  await Post.findAll({
     order: [["id", "DESC"]],
     include: [
       {
@@ -72,27 +72,31 @@ async function getAllPost(req, res) {
 
 async function modifyPost(req, res) {
   const post = await Post.findOne({ where: { id: req.params.id } });
-  const user = await User.findOne({ where: { id: req.auth } });
 
   const filename = post.imgUrl.split("/images/")[1];
   let imgUrl = "";
-
   if (req.file) {
-    (imgUrl = `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`),
-      (title = req.body.title);
+    fs.unlink(`images/${filename}`, () => {
+      imgUrl = `${req.protocol}://${req.get("host")}/images/${
+        req.file.filename
+      }`;
 
-    post
-      .update({ imgUrl: imgUrl })
-      .then(() => res.status(200).json({ message: "Le post a été modifiée!" }))
-      .catch((err) => res.status(404).json({ err }));
+      post
+        .update({ imgUrl: imgUrl || undefined })
+        .then(() =>
+          res.status(200).json({ message: "Le post a été modifiée!" })
+        )
+        .catch((err) => res.status(404).json({ err }));
+    });
   } else {
     postObject = {
       ...req.body.post
     };
     post
-      .update({ title: req.body.title, content: req.body.content })
+      .update({
+        title: req.body.title || undefined,
+        content: req.body.content || undefined
+      })
       .then(() =>
         res.status(200).json({ message: "Le post a été modifiée!", postObject })
       )
@@ -102,7 +106,6 @@ async function modifyPost(req, res) {
 
 async function deletePost(req, res) {
   const post = await Post.findOne({ where: { id: req.params.id } });
-  const user = await User.findOne({ where: { id: req.auth } });
   if (post.UserId === req.auth)
     Post.findByPk(req.params.id).then((post) => {
       console.log(post);
@@ -130,15 +133,10 @@ async function deletePost(req, res) {
     });
 }
 
-function AllPostUser(req, res) {
-  console.log("coucouc");
-}
-
 module.exports = {
   getAllPost,
   createPost,
   getOnePost,
   deletePost,
-  modifyPost,
-  AllPostUser
+  modifyPost
 };

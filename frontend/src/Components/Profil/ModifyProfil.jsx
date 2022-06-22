@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 
 const style = {
@@ -20,34 +20,37 @@ const style = {
 };
 
 export default function ModifyProfil() {
+  let navigate = useNavigate();
   const id = JSON.parse(localStorage.getItem("UserId"));
   const token = JSON.parse(localStorage.getItem("tokens"));
-
-  console.log(id);
-
   const [user, setUser] = useState({ username: "", email: "", password: "" });
   const [file, setFile] = useState();
   const [image, setImage] = useState(null);
-  console.log(user);
+
+  function EmailError() {
+    if (!/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(user.email)) {
+      return <div>Merci de rentrer une addresse e-mail valide!</div>;
+    }
+  }
 
   const onChange = ({ target: { name, value } }) => {
     setUser((user) => ({ ...user, [name]: value }));
-    console.log(user);
   };
+
   const onChangeImage = (e) => {
     const file = e.target.files[0] || undefined;
     setImage(URL.createObjectURL(file));
     setFile(e.target.files[0]);
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
+  const UpdateProfil = async (e) => {
+    e.preventDefault();
     if (file) {
       const Formdata = new FormData();
       Formdata.append("image", file);
       await axios({
         method: "put",
-        url: `http://localhost:3000/api/user/${id}/img`,
+        url: `http://localhost:8080/api/user/${id.userId}/img`,
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -55,12 +58,13 @@ export default function ModifyProfil() {
         },
         data: Formdata
       }).then((res) => {
-        console.log(res);
+        navigate(`../home/user/${id.userId}`, { replace: true });
       });
     }
+
     await axios({
       method: "put",
-      url: `http://localhost:3000/api/user/${id}`,
+      url: `http://localhost:8080/api/user/${id.userId}`,
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -68,15 +72,25 @@ export default function ModifyProfil() {
       },
       data: user
     }).then((res) => {
-      console.log(res);
+      navigate(`../home/user/${id.userId}`, { replace: true });
     });
   };
+
   const DeleteProfil = async (e) => {
-    await axios.delete(`http://localhost:3000/api/user/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    window.location = "/";
+    await axios
+      .delete(`http://localhost:8080/api/user/${id.userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(() => {
+        axios.delete(`http://localhost:8080/api/user/${id.userId}/post`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        localStorage.removeItem("tokens");
+        localStorage.removeItem("UserId");
+        navigate(`../`, { replace: true });
+      });
   };
+
   return (
     <div style={{}}>
       <Header />
@@ -104,6 +118,7 @@ export default function ModifyProfil() {
             variant="standard"
             onChange={onChange}
           />
+          <EmailError />
           <TextField
             type="password"
             id="standard-basic"
@@ -119,7 +134,7 @@ export default function ModifyProfil() {
             accept="image/png, image/jpeg, image/jpg"
             onChange={onChangeImage}
           />
-          <Button variant="contained" onClick={handleSubmit}>
+          <Button variant="contained" onClick={UpdateProfil}>
             Modifier mon profil
           </Button>
           <Button variant="contained" onClick={DeleteProfil}>

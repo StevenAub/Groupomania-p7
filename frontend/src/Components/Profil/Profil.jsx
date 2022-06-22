@@ -1,12 +1,11 @@
 import * as React from "react";
 import Header from "../Header/Header";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
-import imgProfil from "../../Assets/profil.jpg";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -23,7 +22,7 @@ export default function GetUser() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/user/${id}`, {
+      .get(`http://localhost:8080/api/user/${id}`, {
         method: "GET",
         headers: { authorization: `Bearer ${token}` }
       })
@@ -35,7 +34,7 @@ export default function GetUser() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/user/${id}/post`, {
+      .get(`http://localhost:8080/api/user/${id}/post`, {
         method: "GET",
         headers: { authorization: `Bearer ${token}` }
       })
@@ -82,12 +81,18 @@ export default function GetUser() {
             }}
           >
             <CardActionArea>
-              <CardMedia
-                component="img"
-                height="300"
-                image={post.imgUrl}
-                alt="green iguana"
-              />
+              {post.imgUrl ? (
+                <Link to={`/home/post/${post.id}`}>
+                  <CardMedia
+                    component="img"
+                    height="300"
+                    image={post.imgUrl}
+                    alt="green iguana"
+                  />{" "}
+                </Link>
+              ) : (
+                <div></div>
+              )}
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   {post.title}
@@ -98,15 +103,9 @@ export default function GetUser() {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Button
-                size="small"
-                onClick={function postId() {
-                  window.location = `/home/post/${post.id}`;
-                  console.log(post.userId);
-                }}
-              >
-                Commenter
-              </Button>
+              <Link to={`/home/post/${post.id}`}>
+                <Button size="small">Commenter</Button>
+              </Link>
             </CardActions>
           </Card>
         ))}

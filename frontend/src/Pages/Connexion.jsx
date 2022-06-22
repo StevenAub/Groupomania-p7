@@ -1,5 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -41,7 +43,7 @@ function Connexion() {
   };
 
   const userData = async () => {
-    await fetch("http://localhost:3000/api/auth/login", {
+    await fetch("http://localhost:8080/api/auth/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -58,7 +60,14 @@ function Connexion() {
         } else {
           const token = responseData.token;
           localStorage.setItem("tokens", JSON.stringify(token));
-          localStorage.setItem("UserId", JSON.stringify(responseData.data.id));
+          console.log(responseData.data.isAdmin);
+          localStorage.setItem(
+            "UserId",
+            JSON.stringify({
+              userId: responseData.data.id,
+              isAdmin: responseData.data.isAdmin
+            })
+          );
           window.location = "/home";
         }
       })
@@ -138,7 +147,7 @@ function Inscription() {
   };
 
   const userData = async () => {
-    await fetch("http://localhost:3000/api/auth/signup", {
+    await fetch("http://localhost:8080/api/auth/signup", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -148,9 +157,9 @@ function Inscription() {
     })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log("response" + responseData);
         const MsgData = responseData.message;
-        message.textContent = MsgData;
+        const MsgError = responseData.error;
+        message.textContent = MsgData || MsgError;
       })
       .catch((error) => {
         console.log(error);

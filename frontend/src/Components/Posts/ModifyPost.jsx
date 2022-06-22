@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -56,7 +56,7 @@ export default function ModifyPost() {
 
       axios({
         method: "put",
-        url: `http://localhost:3000/api/post/${id}`,
+        url: `http://localhost:8080/api/post/${id}`,
 
         data: formData,
         headers: {
@@ -78,7 +78,7 @@ export default function ModifyPost() {
     }
     axios({
       method: "put",
-      url: `http://localhost:3000/api/post/${id}`,
+      url: `http://localhost:8080/api/post/${id}`,
 
       data: post,
       headers: {
@@ -86,10 +86,7 @@ export default function ModifyPost() {
         authorization: `Bearer ${token}`
       }
     })
-      .then(function (response) {
-        //handle success
-        console.log(response);
-      })
+      .then(function (response) {})
       .catch(function (response) {
         //handle error
         console.log(response);

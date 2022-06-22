@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 import OnePost from "./Components/Posts/OnePost";
 import GetUser from "./Components/Profil/Profil";
-import ModifyUser from "./Components/Profil/ModifyProfil";
+import UpdateUser from "./Components/Profil/ModifyProfil";
 
 //import Inscription from "./Components/Inscription/Inscription";
 //import NewPost from "./Components/Posts/NewPost";
@@ -24,13 +24,13 @@ root.render(
         <Route path="/home" element={<App />} />
       </Routes>
       <Routes>
-        <Route path="/home/post/:id" element={<OnePost />} />
+        <Route path="home/post/:id" element={<OnePost />} />
       </Routes>
       <Routes>
         <Route path="/home/user/:id" element={<GetUser />} />
       </Routes>
       <Routes>
-        <Route path="/home/user/:id/modify" element={<ModifyUser />} />
+        <Route path="/home/user/:id/update" element={<UpdateUser />} />
       </Routes>
     </Router>
   </React.StrictMode>

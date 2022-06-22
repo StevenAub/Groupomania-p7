@@ -1,13 +1,13 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
+import { Link } from "react-router-dom";
+
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-import imgProfil from "../../Assets/profil.jpg";
 import axios from "axios";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
@@ -29,7 +29,7 @@ const DivInput = styled.div`
 `;
 
 async function getList() {
-  return await fetch("http://localhost:3000/api/post", {
+  return await fetch("http://localhost:8080/api/post", {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` }
   })
@@ -63,7 +63,7 @@ function Post() {
 
       axios({
         method: "post",
-        url: "http://localhost:3000/api/post",
+        url: "http://localhost:8080/api/post",
         data: Formdata,
 
         headers: {
@@ -80,7 +80,7 @@ function Post() {
     } else {
       axios({
         method: "post",
-        url: "http://localhost:3000/api/post",
+        url: "http://localhost:8080/api/post",
         data: post,
         headers: {
           "Content-Type": "application/json",
@@ -121,8 +121,9 @@ function Post() {
   return (
     <div
       style={{
-        backgroundColor: "rgba(78, 81, 102, 0.6)",
-        paddingTop: "3%"
+        margin: "auto",
+        paddingTop: "3%",
+        minWidth: "100%"
       }}
     >
       <form name="post">
@@ -156,14 +157,22 @@ function Post() {
               fullWidth
             ></TextField>
           </DivInput>
-          <input
-            type="file"
+          <Button
             id="imgUrl"
             name="imgUrl"
             accept="image/png, image/jpeg, image/jpg"
             onChange={onChangeImage}
-          />
-          <button onClick={handleSubmit}>Publier</button>
+            component="label"
+            style={{ marginRight: "15px" }}
+          >
+            <i className="fa-solid fa-file-image fa-2x"></i>
+            <i className="fa-thin fa-plus fa-2x"></i>
+            <input type="file" hidden />
+          </Button>
+
+          <Button variant="contained" onClick={handleSubmit}>
+            Publier
+          </Button>
         </DivContainair>
       </form>
       {alert && <h2> Post publié !</h2>}
@@ -175,7 +184,7 @@ function Post() {
           justifyContent: "center"
         }}
       >
-        <ul style={{ padding: "0" }}>
+        <ul style={{ padding: "5%" }}>
           {list.length === 0 ? (
             <div>Aucun post disponnible actuellement</div>
           ) : (
@@ -184,15 +193,15 @@ function Post() {
                 key={`${post.title}-${index}`}
                 sx={{
                   width: "100%",
-                  maxWidth: 750,
-                  minWidth: 200,
+                  maxWidth: 850,
                   marginTop: 5
                 }}
                 style={{
                   backgroundColor: "white",
                   borderRadius: "10px",
                   border: "solid 1px #4E5166 ",
-                  boxShadow: "5px 5px 5px #4E5166"
+                  boxShadow: "5px 5px 5px #4E5166",
+                  wordWrap: "break-word"
                 }}
               >
                 <CardContent
@@ -200,48 +209,44 @@ function Post() {
                     padding: "17px 0px 6px 0px"
                   }}
                 >
-                  <Typography gutterBottom variant="h5" component="div">
-                    <h3
-                      style={{
-                        margin: "0",
-                        display: "flex",
-                        justifyContent: "center",
-                        cursor: "pointer",
-                        color: "#4E5166"
-                      }}
-                      onClick={() => {
-                        window.location = `/home/user/${post.UserId}`;
-                      }}
-                    >
-                      <Avatar
-                        alt={post.User.username}
+                  <Link to={`user/${post.UserId}`}>
+                    <Typography gutterBottom variant="h5" component="div">
+                      <h3
                         style={{
-                          marginRight: "10px"
+                          margin: "0",
+                          display: "flex",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          color: "#4E5166"
                         }}
-                        src={imgProfil}
-                      />
-
-                      {post.User.username}
-                    </h3>
-                  </Typography>
+                      >
+                        <Avatar
+                          alt={post.User.username}
+                          style={{
+                            marginRight: "10px"
+                          }}
+                          src={post.User.imgProfil}
+                        />
+                        {post.User.username}
+                      </h3>
+                    </Typography>
+                  </Link>
                 </CardContent>
                 <div>
                   {post.imgUrl ? (
-                    <CardMedia
-                      onClick={function postId() {
-                        window.location = `/home/post/${post.id}`;
-                      }}
-                      component="img"
-                      height="400"
-                      image={post.imgUrl}
-                      alt="green iguana"
-                      style={{
-                        objectFit: "cover",
-                        width: "99%",
-                        margin: "auto",
-                        cursor: "pointer"
-                      }}
-                    />
+                    <Link to={`post/${post.id}`}>
+                      <CardMedia
+                        component="img"
+                        image={post.imgUrl}
+                        alt="green iguana"
+                        style={{
+                          objectFit: "contain",
+                          width: "99%",
+                          margin: "auto",
+                          cursor: "pointer"
+                        }}
+                      />
+                    </Link>
                   ) : (
                     <div></div>
                   )}
@@ -254,15 +259,15 @@ function Post() {
                     </Typography>
                   </CardContent>
 
-                  <div style={{ display: "flex" }}>
-                    <Button
-                      size="small"
-                      onClick={function postId() {
-                        window.location = `/home/post/${post.id}`;
-                      }}
-                    >
-                      Commenter
-                    </Button>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center"
+                    }}
+                  >
+                    <Link to={`post/${post.id}`}>
+                      <Button>Commenter</Button>
+                    </Link>
                     <LikePost id={post.id} />
                   </div>
                 </div>
@@ -274,5 +279,6 @@ function Post() {
     </div>
   );
 }
-
+/*                        window.location = `/home/user/${post.UserId}`;
+ */
 export default Post;

@@ -31,7 +31,7 @@ export function useFetch(url) {
 const token = JSON.parse(localStorage.getItem("tokens"));
 
 export function getList() {
-  return fetch("http://localhost:3000/api/post", {
+  return fetch("http://localhost:8080/api/post", {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`
@@ -40,7 +40,7 @@ export function getList() {
 }
 
 export function setItem(item) {
-  return fetch("http://localhost:3000/api/post", {
+  return fetch("http://localhost:8080/api/post", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -10,7 +10,7 @@ export default function DeletePost() {
   console.log(id);
   function Delete() {
     console.log("hey");
-    axios.delete(`http://localhost:3000/api/post/${id}`, {
+    axios.delete(`http://localhost:8080/api/post/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     window.location = "/home";

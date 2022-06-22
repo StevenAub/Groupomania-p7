@@ -2,19 +2,18 @@ import * as React from "react";
 import logo from "../../Assets/logo.svg";
 import styled from "styled-components";
 import { Button } from "@mui/material";
-import { useEffect } from "react";
-import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 import ModifyProfil from "../Profil/ModifyProfil";
+import { borderBottom } from "@mui/system";
 
 const StyledImg = styled.img`
-  width: 20%;
-  margin: 1%;
+  width: 27%;
+  margin-top: 1em;
 `;
 const StyledDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
   background-color: #ffd7d7;
   height: 5em;
   border-bottom: 2px solid #4e5166;
@@ -30,17 +29,21 @@ function DisplayMyProfil() {
 
   return (
     <div>
-      {window.location.pathname === `/home/user/${myId}` ? (
-        <div onClick={() => (window.location = `/home/user/${myId}/modify`)}>
-          Modifié mon profil
-        </div>
+      {window.location.pathname === `/home/user/${myId.userId}` ? (
+        <Link to={`/home/user/${myId.userId}/update`}>
+          <Button size="small" variant="contained">
+            Modifié mon profil
+          </Button>
+        </Link>
       ) : (
-        <Button
-          variant="outlined"
-          onClick={() => (window.location = `/home/user/${myId}`)}
-        >
-          Mon profil
-        </Button>
+        <Link to={`/home/user/${myId.userId}`}>
+          <Button
+            style={{ height: "2rem", fontSize: ".6em" }}
+            variant="contained"
+          >
+            Mon profil
+          </Button>
+        </Link>
       )}
     </div>
   );
@@ -49,39 +52,45 @@ function DisplayMyProfil() {
 export default function Header() {
   function disconnect() {
     localStorage.removeItem("tokens");
-
-    window.location = "/";
+    localStorage.removeItem("UserId");
   }
   console.log(window.location.pathname);
   return (
     <div>
       <StyledDiv>
         {window.location.pathname !== "/home" ? (
-          <IoIosArrowRoundBack
-            size={60}
-            style={{ color: "black", margin: "auto 5px" }}
-            onClick={function back() {
-              window.location = `/home`;
-            }}
-          />
+          <Link to={`/home`}>
+            <IoIosArrowRoundBack
+              size={60}
+              style={{ color: "black", margin: "auto 5px" }}
+            />
+          </Link>
         ) : (
           <div style={{ margin: "auto 5px" }}></div>
         )}
         <StyledImg src={logo} />
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "10px"
-          }}
-        >
-          <DisplayMyProfil />
-          <Button variant="outlined" onClick={disconnect}>
-            Se déconnecter
+      </StyledDiv>{" "}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "5px",
+          borderBottom: " 2px solid #4e5166",
+          justifyContent: "flex-end"
+        }}
+      >
+        <DisplayMyProfil />
+        <Link to={`/`}>
+          <Button
+            style={{ height: "2rem", fontSize: ".6em" }}
+            variant="contained"
+            onClick={disconnect}
+          >
+            Deconnexion
           </Button>
-        </div>
-      </StyledDiv>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -94,7 +103,7 @@ function Search() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/post", {
+    fetch("http://localhost:8080/api/post", {
       headers: { authorization: `Bearer ${token}` }
     })
       .then((response) => response.json())

@@ -1,6 +1,11 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("sqlite::memory:");
 
+const adminUser = {
+  email: "admin@admin.groupomania",
+  username: "Administrateur",
+  password: "$2b$10$calx5WKn8de.9AD3X3JoQOC7y/CAeNbihgIEavFJRaNQP.27Bbm0q",
+  isAdmin: true
+};
 module.exports = (sequelize, Datatypes) => {
   const User = sequelize.define(
     "User",
@@ -20,10 +25,7 @@ module.exports = (sequelize, Datatypes) => {
       },
       username: {
         type: Datatypes.STRING,
-        allowNull: true,
-        unique: {
-          msg: "Le nom d'utilisateur est deja utilisée!"
-        }
+        allowNull: true
       },
       password: {
         type: Datatypes.STRING,
@@ -33,10 +35,12 @@ module.exports = (sequelize, Datatypes) => {
         type: Datatypes.STRING,
         allowNull: true
       },
-      admin: {
-        type: DataTypes.BOOLEAN
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
+
     {
       modelName: "User",
       timestamp: true,
@@ -44,6 +48,9 @@ module.exports = (sequelize, Datatypes) => {
       updatedAt: true
     }
   );
+  //GroupomaniaOCR2022
+  //admin@admin.groupomania
+  //Administrateur
 
   return User;
 };

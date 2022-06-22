@@ -7,38 +7,39 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import Avatar from "@mui/material/Avatar";
-import imgProfil from "../../Assets/profil.jpg";
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 
 export default function DisplayAllComment() {
   const [list, setList] = useState([]);
   const [alert, setAlert] = useState(false);
+  const [error, setError] = useState([]);
   let newComment = true;
 
   const idRequest = useParams();
   const id = idRequest.id;
   const token = JSON.parse(localStorage.getItem("tokens"));
-
+  const userId = JSON.parse(localStorage.getItem("UserId"));
+  console.log(userId);
   //const [comment, setComment] = useState(false);
   //Ajout d'un commentaire
 
   function AddComment() {
     const idRequest = useParams();
     const id = idRequest.id;
-
     const token = JSON.parse(localStorage.getItem("tokens"));
+    const [comment, setComment] = useState("");
 
-    const [comment, setComment] = useState({});
     const onChange = (e) => {
       let value = e.target.value;
       setComment(value);
     };
     const handleSubmit = async (e) => {
       e.preventDefault();
+
       await axios({
         method: "POST",
-        url: `http://localhost:3000/api/post/${id}/comments`,
+        url: `http://localhost:8080/api/post/${id}/comments`,
         data: { content: comment },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,7 +53,7 @@ export default function DisplayAllComment() {
           }
         })
         .catch((response) => {
-          console.log(response);
+          setError(response.response.data.message);
         });
     };
 
@@ -76,13 +77,16 @@ export default function DisplayAllComment() {
             <form name="comment">
               <TextField
                 id="outlined-basic"
+                name="content"
                 label="Commentaire..."
                 multiline
                 variant="outlined"
                 rows={2}
                 onChange={onChange}
                 fullWidth
-              ></TextField>{" "}
+                required
+              ></TextField>
+              <p>{error}</p>
               <div>
                 <Button
                   style={{ margin: "5px" }}
@@ -105,12 +109,13 @@ export default function DisplayAllComment() {
       return;
     }
     axios
-      .get(`http://localhost:3000/api/post/${id}/comments`, {
+      .get(`http://localhost:8080/api/post/${id}/comments`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
       .then((items) => {
+        console.log(items);
         if (newComment) {
           setList(items.data.GetComment);
         }
@@ -131,10 +136,24 @@ export default function DisplayAllComment() {
   if (!list) {
     return <div></div>;
   }
+
+  function Delete(comment) {
+    const commentId = comment.target.id;
+    console.log(id);
+    console.log(commentId);
+    axios
+      .delete(`http://localhost:8080/api/post/${id}/comments/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then((res) => {
+        console.log(res);
+        setAlert(true);
+      })
+      .catch((err) => console.log(err));
+  }
   return (
     <div>
       <AddComment />
-      {alert && <h2>Commentaire publié !</h2>}
 
       {list?.map((comment, index) => (
         <Card
@@ -161,8 +180,15 @@ export default function DisplayAllComment() {
                 style={{
                   marginRight: "10px"
                 }}
-                src={imgProfil}
+                src={comment.User.imgProfil}
               />
+              {comment.UserId === userId.userId ? (
+                <div id={comment.id} onClick={Delete}>
+                  ❌
+                </div>
+              ) : (
+                <div></div>
+              )}
               <h3
                 style={{
                   margin: "0",

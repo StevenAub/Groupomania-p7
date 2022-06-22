@@ -14,14 +14,14 @@ module.exports = (req, res, next) => {
     });
   }
   const token = authorizationHeader.split(" ")[1];
-  const decodedToken = jwt.verify(token, privateKey, (err, decodedToken) => {
+  jwt.verify(token, privateKey, (err, decodedToken) => {
     if (err) {
       return res.status(401).json({
         message: "L'utilisateur n'est pas autorisé a acceder a cette ressource!"
       });
     }
     const userId = decodedToken.userId;
-
+    console.log(userId);
     if (req.body.userId && req.body.userId !== userId) {
       res
         .status(401)
