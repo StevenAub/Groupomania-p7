@@ -74,13 +74,14 @@ async function modifyPost(req, res) {
   const post = await Post.findOne({ where: { id: req.params.id } });
 
   const filename = post.imgUrl.split("/images/")[1];
+  console.log(filename);
   let imgUrl = "";
   if (req.file) {
     fs.unlink(`images/${filename}`, () => {
       imgUrl = `${req.protocol}://${req.get("host")}/images/${
         req.file.filename
       }`;
-
+      console.log(imgUrl);
       post
         .update({ imgUrl: imgUrl || undefined })
         .then(() =>

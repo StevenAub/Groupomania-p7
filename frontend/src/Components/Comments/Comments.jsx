@@ -138,8 +138,8 @@ export default function DisplayAllComment() {
   }
 
   function Delete(comment) {
+    console.log(comment);
     const commentId = comment.target.id;
-    console.log(id);
     console.log(commentId);
     axios
       .delete(`http://localhost:8080/api/post/${id}/comments/${commentId}`, {
@@ -175,20 +175,6 @@ export default function DisplayAllComment() {
                 margin: "10px 10px 30px 10px"
               }}
             >
-              <Avatar
-                alt={comment.User.username}
-                style={{
-                  marginRight: "10px"
-                }}
-                src={comment.User.imgProfil}
-              />
-              {comment.UserId === userId.userId ? (
-                <div id={comment.id} onClick={Delete}>
-                  ❌
-                </div>
-              ) : (
-                <div></div>
-              )}
               <h3
                 style={{
                   margin: "0",
@@ -201,12 +187,35 @@ export default function DisplayAllComment() {
                   window.location = `/home/user/${comment.UserId}`;
                 }}
               >
+                <Avatar
+                  alt={comment.User.username}
+                  style={{
+                    marginRight: "10px"
+                  }}
+                  src={comment.User.imgProfil}
+                />
                 {comment.User.username}
               </h3>
             </Typography>
+
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
               {comment.content}
             </Typography>
+            {comment.UserId === userId.userId ? (
+              <div
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "flex-end"
+                }}
+                id={comment.id}
+                onClick={Delete}
+              >
+                <Button id={comment.id}> ❌ Supprimé commentaire</Button>
+              </div>
+            ) : (
+              <div></div>
+            )}
           </CardContent>
         </Card>
       ))}

@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const User = sequelize.models.User;
 const Post = sequelize.models.Post;
 const Comment = sequelize.models.Comment;
+const Likes = sequelize.models.Likes;
 const privateKey = "jdjdjddj";
 const fs = require("fs");
 var validator = require("email-validator");
@@ -117,10 +118,6 @@ async function getPostUserId(req, res) {
     res.status(200).json({ GetPost });
   }
 }
-async function DeletePostCommentUserId(req, res) {
-  await Post.destroy({ where: { UserId: req.auth } });
-  await Comment.destroy({ where: { UserId: req.auth } });
-}
 
 async function modifyUser(req, res) {
   const id = req.params.id;
@@ -166,33 +163,50 @@ async function modifyImageUser(req, res) {
   });
 }
 async function deleteUser(req, res) {
-  const post = await Post.findOne({ where: { id: req.params.id } });
-  const user = await User.findOne({ where: { id: req.auth } });
-  if (user.id === req.auth)
-    User.findByPk(req.params.id).then((user) => {
-      console.log(user);
-      if (user === null) {
-        return res
-          .status(404)
-          .json({ message: "L'utilisateur demandé n'existe pas!" });
-      }
-      const filename = user.imgProfil.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () => {
-        User.destroy({ where: { id: user.id } })
-          .then((_) => {
-            res.status(200).json({
-              message: `L'utilisateur' ${user.username} à bien été supprimé!`
-            });
-          })
-          .catch((error) => {
-            res.status(500).json({
-              message:
-                "L'utilisateur n'a pas pu etre supprimé, Réessayez dans quelques instants!",
-              erreur: err
-            });
-          });
-      });
+  const user = await User.findOne({
+    where: { id: req.auth },
+    include: { model: Post, attributes: ["imgUrl"] }
+  });
+  if (user.id === req.auth);
+
+  const postsUser = JSON.stringify(user.Posts);
+  const allImg = JSON.parse(postsUser);
+  console.log(allImg);
+  allImg.map((imgurl) => {
+    console.log(imgurl.imgUrl);
+    const filename = imgurl.imgUrl.split("/images/")[1];
+    fs.unlink(`images/${filename}`, () => {
+      Post.destroy({ where: { UserId: req.params.id } });
+      Comment.destroy({ where: { UserId: req.params.id } });
+      Likes.destroy({ where: { UserId: req.params.id } });
     });
+  });
+
+  User.findByPk(req.params.id).then((user) => {
+    console.log(user);
+    if (user === null) {
+      return res
+        .status(404)
+        .json({ message: "L'utilisateur demandé n'existe pas!" });
+    }
+    const filename = user.imgProfil.split("/images/")[1];
+
+    fs.unlink(`images/${filename}`, () => {
+      User.destroy({ where: { id: user.id } })
+        .then((_) => {
+          res.status(200).json({
+            message: `L'utilisateur' ${user.username} à bien été supprimé!`
+          });
+        })
+        .catch((error) => {
+          res.status(500).json({
+            message:
+              "L'utilisateur n'a pas pu etre supprimé, Réessayez dans quelques instants!",
+            erreur: err
+          });
+        });
+    });
+  });
 }
 
 module.exports = {
@@ -203,6 +217,5 @@ module.exports = {
   modifyUser,
   deleteUser,
   getPostUserId,
-  DeletePostCommentUserId,
   modifyImageUser
 };

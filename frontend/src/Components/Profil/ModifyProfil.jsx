@@ -7,18 +7,6 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4
-};
-
 export default function ModifyProfil() {
   let navigate = useNavigate();
   const id = JSON.parse(localStorage.getItem("UserId"));
@@ -26,7 +14,7 @@ export default function ModifyProfil() {
   const [user, setUser] = useState({ username: "", email: "", password: "" });
   const [file, setFile] = useState();
   const [image, setImage] = useState(null);
-
+  const [nameImage, setNameImage] = useState("");
   function EmailError() {
     if (!/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(user.email)) {
       return <div>Merci de rentrer une addresse e-mail valide!</div>;
@@ -39,6 +27,7 @@ export default function ModifyProfil() {
 
   const onChangeImage = (e) => {
     const file = e.target.files[0] || undefined;
+    setNameImage(file.name);
     setImage(URL.createObjectURL(file));
     setFile(e.target.files[0]);
   };
@@ -82,9 +71,6 @@ export default function ModifyProfil() {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(() => {
-        axios.delete(`http://localhost:8080/api/user/${id.userId}/post`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
         localStorage.removeItem("tokens");
         localStorage.removeItem("UserId");
         navigate(`../`, { replace: true });
@@ -126,18 +112,27 @@ export default function ModifyProfil() {
             name="password"
             variant="standard"
             onChange={onChange}
-          />
-          <input
-            type="file"
-            id="imgProdfil"
-            name="imgProfil"
-            accept="image/png, image/jpeg, image/jpg"
-            onChange={onChangeImage}
-          />
+          />{" "}
+          Ajouter une image de profil
+          <p>
+            <Button
+              id="imgUrl"
+              name="imgUrl"
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={onChangeImage}
+              component="label"
+              style={{ marginRight: "15px" }}
+            >
+              <i className="fa-solid fa-file-image fa-2x"></i>
+              <i className="fa-thin fa-plus fa-2x"></i>
+              <input type="file" hidden />
+            </Button>
+            {nameImage}
+          </p>
           <Button variant="contained" onClick={UpdateProfil}>
             Modifier mon profil
           </Button>
-          <Button variant="contained" onClick={DeleteProfil}>
+          <Button color="error" variant="contained" onClick={DeleteProfil}>
             Supprimer mon profil
           </Button>
         </div>

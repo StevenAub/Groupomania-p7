@@ -11,7 +11,6 @@ router.get("/", auth, userCtrl.getAllUsers);
 router.get("/:id", auth, userCtrl.getOneUser);
 router.put("/:id", auth, multerconfig, userCtrl.modifyUser);
 router.put("/:id/img", auth, multerconfig, userCtrl.modifyImageUser);
-router.delete("/:id/post", auth, userCtrl.DeletePostCommentUserId);
 router.delete("/:id", auth, userCtrl.deleteUser);
 router.get("/:id/post", auth, userCtrl.getPostUserId);
 
