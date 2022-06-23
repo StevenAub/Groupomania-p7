@@ -25,7 +25,6 @@ export default function ModifyPost() {
   const token = JSON.parse(localStorage.getItem("tokens"));
 
   const id = useParams().id;
-  console.log(id);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -37,14 +36,10 @@ export default function ModifyPost() {
 
   const onChange = ({ target: { name, value } }) => {
     setPost((post) => ({ ...post, [name]: value }));
-    console.log(post);
   };
   const onChangeImage = (e) => {
     setImage(URL.createObjectURL(e.target.files[0]));
-    console.log("file", image);
     setFile(e.target.files[0]);
-    console.log(image);
-    console.log(e.target.files[0]);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,11 +63,9 @@ export default function ModifyPost() {
         }
       })
         .then(function (response) {
-          //handle success
           console.log(response);
         })
         .catch(function (response) {
-          //handle error
           console.log(response);
         });
     }
@@ -88,7 +81,6 @@ export default function ModifyPost() {
     })
       .then(function (response) {})
       .catch(function (response) {
-        //handle error
         console.log(response);
       });
   };

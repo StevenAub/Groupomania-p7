@@ -7,17 +7,10 @@ import Typography from "@mui/material/Typography";
 import { Stack } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
 import Comment from "../Comments/Comments";
-import styled from "styled-components";
 import DeletePost from "./DeletePost";
 import { useState, useEffect } from "react";
 import ModifyPost from "./ModifyPost";
 import Avatar from "@mui/material/Avatar";
-
-const StyledDivComment = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-`;
 
 function GetOnedata() {
   const id = useParams();
@@ -26,7 +19,6 @@ function GetOnedata() {
 
   const userId = JSON.parse(localStorage.getItem("UserId"));
   const [post, setPost] = useState({});
-  console.log(userId);
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/post/${id.id}`, {
@@ -48,12 +40,12 @@ function GetOnedata() {
           margin: "0px 5%"
         }}
       >
-        <Stack justifyContent="center" alignItems="center" spacing={2}>
+        <Stack justifyContent="center" alignItems="center">
           <Card
             sx={{
               width: "100%",
-              maxWidth: 950,
-              margin: 10
+              maxWidth: 800,
+              margin: 3
             }}
             style={{
               backgroundColor: "white",
@@ -129,9 +121,7 @@ function GetOnedata() {
               </CardContent>
             </div>
           </Card>
-          <StyledDivComment>
-            <Comment />
-          </StyledDivComment>
+          <Comment />
         </Stack>
       </div>
     </div>

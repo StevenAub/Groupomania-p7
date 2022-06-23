@@ -4,10 +4,8 @@ const User = sequelize.models.User;
 const fs = require("fs");
 
 async function createPost(req, res) {
-  console.log("auth" + req.auth);
   /* const post = await Post.findOne({ where: { id: req.params.id } });*/
   const user = await User.findOne({ where: { id: req.auth } });
-
   try {
     let imgUrl = "";
     if (req.file) {
@@ -23,8 +21,12 @@ async function createPost(req, res) {
       UserId: req.auth,
       PostId: parseInt(req.params.id)
     });
-    console.log(post);
-    return res.status(200).json({ post });
+    console.log("title " + req.body.title);
+    if (req.body.title === "") {
+      res.status(400).json({ message: "Merci de remplir au moins le titre" });
+    } else {
+      return res.status(200).json({ post });
+    }
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -32,8 +34,7 @@ async function createPost(req, res) {
 
 async function getOnePost(req, res) {
   const id = req.params.id;
-  console.log(id);
-  console.log(req.auth);
+
   const GetPost = await Post.findOne({
     where: { id: id },
     include: [
@@ -74,14 +75,12 @@ async function modifyPost(req, res) {
   const post = await Post.findOne({ where: { id: req.params.id } });
 
   const filename = post.imgUrl.split("/images/")[1];
-  console.log(filename);
   let imgUrl = "";
   if (req.file) {
     fs.unlink(`images/${filename}`, () => {
       imgUrl = `${req.protocol}://${req.get("host")}/images/${
         req.file.filename
       }`;
-      console.log(imgUrl);
       post
         .update({ imgUrl: imgUrl || undefined })
         .then(() =>
@@ -109,7 +108,6 @@ async function deletePost(req, res) {
   const post = await Post.findOne({ where: { id: req.params.id } });
   if (post.UserId === req.auth)
     Post.findByPk(req.params.id).then((post) => {
-      console.log(post);
       if (post === null) {
         return res
           .status(404)

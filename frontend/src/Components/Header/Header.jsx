@@ -54,7 +54,6 @@ export default function Header() {
     localStorage.removeItem("tokens");
     localStorage.removeItem("UserId");
   }
-  console.log(window.location.pathname);
   return (
     <div>
       <StyledDiv>
@@ -83,6 +82,7 @@ export default function Header() {
         <DisplayMyProfil />
         <Link to={`/`}>
           <Button
+            color="error"
             style={{ height: "2rem", fontSize: ".6em" }}
             variant="contained"
             onClick={disconnect}
@@ -94,54 +94,3 @@ export default function Header() {
     </div>
   );
 }
-
-/*
-function Search() {
-  const token = JSON.parse(localStorage.getItem("tokens"));
-
-  const [datas, setDatas] = useState([]);
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    fetch("http://localhost:8080/api/post", {
-      headers: { authorization: `Bearer ${token}` }
-    })
-      .then((response) => response.json())
-      .then((data) => setDatas(data));
-  }, [token]);
-
-  const PostData = datas?.posts;
-  const handleSearch = (e) => {
-    let value = e.target.value;
-    setSearch(value);
-  };
-
-  console.log(search);
-  return (
-    <>
-      <div>
-        <div className="search">
-          <StyledInput
-            type="text"
-            name="searchBar"
-            id="searchBar"
-            placeholder="Rechercher sur groupomania"
-            onChange={handleSearch}
-          />
-        </div>
-        <div className="search_results">
-          {PostData?.filter((val) => {
-            return val.title.toLowerCase().includes(search.toLowerCase());
-          }).map((val, index) => {
-            return (
-              <div className="search_result" key={val.title + index}>
-                {val.title}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </>
-  );
-}
-*/

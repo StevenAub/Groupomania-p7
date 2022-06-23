@@ -58,7 +58,6 @@ function Login(req, res) {
         const message = `L'utilisateur demandé n'existe pas.`;
         return res.status(404).json({ message });
       }
-      console.log("user" + user.id);
       return bcrypt
         .compare(req.body.password, user.password)
         .then((isPasswordValid) => {
@@ -74,7 +73,6 @@ function Login(req, res) {
               expiresIn: "24h"
             }
           );
-          console.log("token" + token);
           req.auth = user.id;
           req.username = user.username;
           const message = `L'utilisateur a été connecté avec succès`;
@@ -100,7 +98,6 @@ async function getAllUsers(req, res) {
 
 async function getOneUser(req, res) {
   const id = req.params.id;
-  console.log(id);
   const GetUser = await User.findOne({ where: { id: id } });
 
   if (GetUser === null) {
@@ -127,8 +124,7 @@ async function modifyUser(req, res) {
   const password = req.body.password;
 
   const userTest = { ...req.body };
-  console.log({ ...req.body });
-  console.log(username);
+
   if (password) {
     bcrypt.hash(req.body.password, 10).then((hash) => {
       user.update({ password: hash });
@@ -151,7 +147,6 @@ async function modifyImageUser(req, res) {
   fs.unlink(`images/${filename}`, () => {
     if (req.file) {
       img = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
-      console.log(img);
 
       user
         .update({
@@ -171,9 +166,7 @@ async function deleteUser(req, res) {
 
   const postsUser = JSON.stringify(user.Posts);
   const allImg = JSON.parse(postsUser);
-  console.log(allImg);
   allImg.map((imgurl) => {
-    console.log(imgurl.imgUrl);
     const filename = imgurl.imgUrl.split("/images/")[1];
     fs.unlink(`images/${filename}`, () => {
       Post.destroy({ where: { UserId: req.params.id } });
@@ -183,7 +176,6 @@ async function deleteUser(req, res) {
   });
 
   User.findByPk(req.params.id).then((user) => {
-    console.log(user);
     if (user === null) {
       return res
         .status(404)

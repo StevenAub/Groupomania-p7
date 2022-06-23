@@ -21,7 +21,6 @@ module.exports = (req, res, next) => {
       });
     }
     const userId = decodedToken.userId;
-    console.log(userId);
     if (req.body.userId && req.body.userId !== userId) {
       res
         .status(401)

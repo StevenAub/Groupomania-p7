@@ -11,7 +11,6 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
-import Comment from "../Comments/Comments";
 
 export default function GetUser() {
   const token = JSON.parse(localStorage.getItem("tokens"));
@@ -43,7 +42,6 @@ export default function GetUser() {
       })
       .catch((err) => console.log(err));
   }, [id]);
-  console.log(posts);
   return (
     <div>
       <Header />{" "}
@@ -52,7 +50,8 @@ export default function GetUser() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "rgba(78, 81, 102, 0.6)"
+          backgroundColor: "rgba(78, 81, 102, 0.6)",
+          padding: "3%"
         }}
       >
         <Stack direction="row" spacing={2} style={{ margin: "15px" }}>
@@ -67,9 +66,8 @@ export default function GetUser() {
         {posts?.map((post, index) => (
           <Card
             sx={{
-              width: 750,
+              width: "100%",
               maxWidth: 750,
-              minWidth: 200,
               marginTop: 5
             }}
             key={`${post.title}-${index}`}

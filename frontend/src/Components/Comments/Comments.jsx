@@ -2,7 +2,7 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
@@ -20,7 +20,6 @@ export default function DisplayAllComment() {
   const id = idRequest.id;
   const token = JSON.parse(localStorage.getItem("tokens"));
   const userId = JSON.parse(localStorage.getItem("UserId"));
-  console.log(userId);
   //const [comment, setComment] = useState(false);
   //Ajout d'un commentaire
 
@@ -65,7 +64,7 @@ export default function DisplayAllComment() {
             borderRadius: "10px",
             border: "solid 1px #4E5166 ",
             boxShadow: "5px 5px 5px #4E5166",
-            maxWidth: "80%",
+            maxWidth: 800,
             margin: "auto"
           }}
         >
@@ -115,7 +114,6 @@ export default function DisplayAllComment() {
         }
       })
       .then((items) => {
-        console.log(items);
         if (newComment) {
           setList(items.data.GetComment);
         }
@@ -138,32 +136,30 @@ export default function DisplayAllComment() {
   }
 
   function Delete(comment) {
-    console.log(comment);
     const commentId = comment.target.id;
-    console.log(commentId);
     axios
       .delete(`http://localhost:8080/api/post/${id}/comments/${commentId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then((res) => {
-        console.log(res);
         setAlert(true);
       })
       .catch((err) => console.log(err));
   }
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <AddComment />
 
       {list?.map((comment, index) => (
         <Card
-          sx={{ minWidth: 275, margin: 2 }}
           key={`${comment.content}-${index}`}
           style={{
             backgroundColor: "white",
             borderRadius: "10px",
             border: "solid 1px #4E5166 ",
-            boxShadow: "5px 5px 5px #4E5166"
+            boxShadow: "5px 5px 5px #4E5166",
+            maxWidth: 800,
+            margin: "3% auto"
           }}
         >
           <CardContent>
@@ -175,27 +171,27 @@ export default function DisplayAllComment() {
                 margin: "10px 10px 30px 10px"
               }}
             >
-              <h3
-                style={{
-                  margin: "0",
-                  display: "flex",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  color: "#4E5166"
-                }}
-                onClick={() => {
-                  window.location = `/home/user/${comment.UserId}`;
-                }}
-              >
-                <Avatar
-                  alt={comment.User.username}
+              <Link to={`/home/user/${comment.UserId}`}>
+                {" "}
+                <h3
                   style={{
-                    marginRight: "10px"
+                    margin: "0",
+                    display: "flex",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    color: "#4E5166"
                   }}
-                  src={comment.User.imgProfil}
-                />
-                {comment.User.username}
-              </h3>
+                >
+                  <Avatar
+                    alt={comment.User.username}
+                    style={{
+                      marginRight: "10px"
+                    }}
+                    src={comment.User.imgProfil}
+                  />
+                  {comment.User.username}
+                </h3>
+              </Link>
             </Typography>
 
             <Typography sx={{ mb: 1.5 }} color="text.secondary">

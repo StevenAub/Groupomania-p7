@@ -18,7 +18,6 @@ export default function LikePost(post) {
         }
       })
       .then((result) => {
-        console.log(result.data);
         setLikes(result.data);
       });
   }, [token, postId]);
@@ -34,7 +33,6 @@ export default function LikePost(post) {
       },
       data: { like: 1 }
     }).then((result) => {
-      console.log(result);
       setLikes(result.data.like);
     });
   }

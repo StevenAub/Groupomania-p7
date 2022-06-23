@@ -12,7 +12,6 @@ async function findAllLikes(req, res, next) {
     }
   })
     .then((likes) => {
-      console.log(likes);
       res.status(200).json(likes.length);
     })
     .catch((error) => res.status(400).json({ error }));
@@ -23,7 +22,6 @@ async function likePost(req, res, next) {
     where: { id: req.params.id }
   });
 
-  console.log(post.id);
   const likeObject = req.body;
   Like.findAll({
     where: {
@@ -31,14 +29,12 @@ async function likePost(req, res, next) {
       PostId: post.id
     }
   }).then((likes) => {
-    console.log(likes);
     if (likes.length === 0) {
       const like = new Like({
         ...likeObject,
         UserId: req.auth,
         PostId: post.id
       });
-      console.log(like.isNewRecord);
       like
         .save()
         .then(() => {

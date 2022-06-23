@@ -54,13 +54,11 @@ function Connexion() {
       .then((response) => response.json())
       .then((responseData) => {
         if (!responseData.data) {
-          console.log(responseData.data);
           const MsgData = responseData.message;
           formError.textContent = MsgData;
         } else {
           const token = responseData.token;
           localStorage.setItem("tokens", JSON.stringify(token));
-          console.log(responseData.data.isAdmin);
           localStorage.setItem(
             "UserId",
             JSON.stringify({
@@ -138,7 +136,6 @@ function Inscription() {
     background-color: red;
     border-radius: 8px;
   `;*/ const message = document.querySelector(".message");
-  console.log(message);
 
   const [form, setForm] = useState({ email: "", username: "", password: "" });
 

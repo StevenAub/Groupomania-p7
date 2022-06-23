@@ -15,12 +15,6 @@ import LikePost from "../Like/Likes";
 
 const token = JSON.parse(localStorage.getItem("tokens"));
 
-const DivContainair = styled.div`
-  padding: 30px;
-  align-items: center;
-  max-width: 50%;
-  margin: auto;
-`;
 const DivInput = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,12 +37,16 @@ function Post() {
   const [post, setPost] = useState({ title: "", content: "" });
   const [file, setFile] = useState();
   const [image, setImage] = useState(null);
+  const [nameImage, setNameImage] = useState("");
   let newPost = true;
 
   const onChange = ({ target: { name, value } }) => {
     setPost((post) => ({ ...post, [name]: value }));
   };
   const onChangeImage = (e) => {
+    const file = e.target.files[0] || undefined;
+    setNameImage(file.name);
+
     setImage(URL.createObjectURL(e.target.files[0]));
     setFile(e.target.files[0]);
   };
@@ -75,6 +73,9 @@ function Post() {
         if (newPost) {
           setAlert(true);
           document.forms["post"].reset();
+          setPost({ title: "", content: "" });
+          setFile("");
+          setNameImage("");
         }
       });
     } else {
@@ -90,6 +91,8 @@ function Post() {
         if (newPost) {
           setAlert(true);
           document.forms["post"].reset();
+          setFile("");
+          setPost({ title: "", content: "" });
         }
       });
     }
@@ -121,164 +124,165 @@ function Post() {
   return (
     <div
       style={{
-        margin: "auto",
-        paddingTop: "3%",
-        minWidth: "100%"
+        padding: "3% 5%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
       }}
     >
-      <form name="post">
-        <DivContainair
-          style={{
-            backgroundColor: "white",
-            borderRadius: "10px",
-            border: "solid 1px #4E5166 ",
-            boxShadow: "5px 5px 5px #4E5166"
-          }}
+      <form
+        name="post"
+        style={{
+          backgroundColor: "white",
+          borderRadius: "10px",
+          border: "solid 1px #4E5166 ",
+          boxShadow: "5px 5px 5px #4E5166",
+          padding: "2%",
+          width: "100%",
+          maxWidth: 850
+        }}
+      >
+        <DivInput>
+          <TextField
+            id="outlined-basic"
+            label="Titre"
+            name="title"
+            multiline
+            variant="outlined"
+            rows={1}
+            onChange={onChange}
+            fullWidth
+          ></TextField>{" "}
+          <TextField
+            id="outlined-basic"
+            label="Description...(optionnel)"
+            name="content"
+            multiline
+            variant="outlined"
+            rows={3}
+            onChange={onChange}
+            fullWidth
+          ></TextField>
+        </DivInput>
+        <Button
+          id="imgUrl"
+          name="imgUrl"
+          accept="image/png, image/jpeg, image/jpg"
+          onChange={onChangeImage}
+          component="label"
+          style={{ marginRight: "15px" }}
         >
-          <DivInput>
-            <TextField
-              id="outlined-basic"
-              label="Titre"
-              name="title"
-              multiline
-              variant="outlined"
-              rows={1}
-              onChange={onChange}
-              fullWidth
-            ></TextField>{" "}
-            <TextField
-              id="outlined-basic"
-              label="Description...(optionnel)"
-              name="content"
-              multiline
-              variant="outlined"
-              rows={3}
-              onChange={onChange}
-              fullWidth
-            ></TextField>
-          </DivInput>
-          <Button
-            id="imgUrl"
-            name="imgUrl"
-            accept="image/png, image/jpeg, image/jpg"
-            onChange={onChangeImage}
-            component="label"
-            style={{ marginRight: "15px" }}
-          >
-            <i className="fa-solid fa-file-image fa-2x"></i>
-            <i className="fa-thin fa-plus fa-2x"></i>
-            <input type="file" hidden />
-          </Button>
-
-          <Button variant="contained" onClick={handleSubmit}>
-            Publier
-          </Button>
-        </DivContainair>
+          <i className="fa-solid fa-file-image fa-2x"></i>
+          <i className="fa-thin fa-plus fa-2x"></i>
+          <input type="file" hidden /> {nameImage}
+        </Button>
+        <Button variant="contained" onClick={handleSubmit}>
+          Publier
+        </Button>
       </form>
       {alert && <h2> Post publié !</h2>}
 
-      <div
-        className="wrapper"
+      <ul
         style={{
+          padding: "0",
+          width: "100%",
           display: "flex",
-          justifyContent: "center"
+          flexDirection: "column",
+          alignItems: "center"
         }}
       >
-        <ul style={{ padding: "5%" }}>
-          {list.length === 0 ? (
-            <div>Aucun post disponnible actuellement</div>
-          ) : (
-            list?.map((post, index) => (
-              <Card
-                key={`${post.title}-${index}`}
-                sx={{
-                  width: "100%",
-                  maxWidth: 850,
-                  marginTop: 5
-                }}
+        {list.length === 0 ? (
+          <div>Aucun post disponnible actuellement</div>
+        ) : (
+          list?.map((post, index) => (
+            <Card
+              key={`${post.title}-${index}`}
+              sx={{
+                width: "100%",
+                maxWidth: 850,
+                marginTop: 5
+              }}
+              style={{
+                backgroundColor: "white",
+                borderRadius: "10px",
+                border: "solid 1px #4E5166 ",
+                boxShadow: "5px 5px 5px #4E5166",
+                wordWrap: "break-word"
+              }}
+            >
+              <CardContent
                 style={{
-                  backgroundColor: "white",
-                  borderRadius: "10px",
-                  border: "solid 1px #4E5166 ",
-                  boxShadow: "5px 5px 5px #4E5166",
-                  wordWrap: "break-word"
+                  padding: "17px 0px 6px 0px"
                 }}
               >
-                <CardContent
+                <Link to={`user/${post.UserId}`}>
+                  <Typography gutterBottom variant="h5" component="div">
+                    <h3
+                      style={{
+                        margin: "0",
+                        display: "flex",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        color: "#4E5166"
+                      }}
+                    >
+                      <Avatar
+                        alt={post.User.username}
+                        style={{
+                          marginRight: "10px"
+                        }}
+                        src={post.User.imgProfil}
+                      />
+                      {post.User.username}
+                    </h3>
+                  </Typography>
+                </Link>
+              </CardContent>
+              <div>
+                {post.imgUrl ? (
+                  <Link to={`post/${post.id}`}>
+                    <CardMedia
+                      component="img"
+                      image={post.imgUrl}
+                      alt="green iguana"
+                      style={{
+                        objectFit: "contain",
+                        width: "99%",
+                        margin: "auto",
+                        cursor: "pointer"
+                      }}
+                    />
+                  </Link>
+                ) : (
+                  <div></div>
+                )}
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {post.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {post.content}
+                  </Typography>
+                </CardContent>
+
+                <div
                   style={{
-                    padding: "17px 0px 6px 0px"
+                    display: "flex",
+                    alignItems: "center"
                   }}
                 >
-                  <Link to={`user/${post.UserId}`}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      <h3
-                        style={{
-                          margin: "0",
-                          display: "flex",
-                          justifyContent: "center",
-                          cursor: "pointer",
-                          color: "#4E5166"
-                        }}
-                      >
-                        <Avatar
-                          alt={post.User.username}
-                          style={{
-                            marginRight: "10px"
-                          }}
-                          src={post.User.imgProfil}
-                        />
-                        {post.User.username}
-                      </h3>
-                    </Typography>
+                  <Link to={`post/${post.id}`}>
+                    <Button>Commenter</Button>
                   </Link>
-                </CardContent>
-                <div>
-                  {post.imgUrl ? (
-                    <Link to={`post/${post.id}`}>
-                      <CardMedia
-                        component="img"
-                        image={post.imgUrl}
-                        alt="green iguana"
-                        style={{
-                          objectFit: "contain",
-                          width: "99%",
-                          margin: "auto",
-                          cursor: "pointer"
-                        }}
-                      />
-                    </Link>
-                  ) : (
-                    <div></div>
-                  )}
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {post.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {post.content}
-                    </Typography>
-                  </CardContent>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center"
-                    }}
-                  >
-                    <Link to={`post/${post.id}`}>
-                      <Button>Commenter</Button>
-                    </Link>
-                    <LikePost id={post.id} />
-                  </div>
+                  <LikePost id={post.id} />
                 </div>
-              </Card>
-            ))
-          )}
-        </ul>
-      </div>
+              </div>
+            </Card>
+          ))
+        )}
+      </ul>
     </div>
   );
 }
-/*                        window.location = `/home/user/${post.UserId}`;
- */
+
 export default Post;
