@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -23,22 +23,17 @@ const style = {
 
 export default function ModifyPost() {
   const token = JSON.parse(localStorage.getItem("tokens"));
-
   const id = useParams().id;
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
   const [post, setPost] = useState({ title: "", content: "" });
   const [file, setFile] = useState();
-  const [image, setImage] = useState(null);
 
   const onChange = ({ target: { name, value } }) => {
     setPost((post) => ({ ...post, [name]: value }));
   };
   const onChangeImage = (e) => {
-    setImage(URL.createObjectURL(e.target.files[0]));
     setFile(e.target.files[0]);
   };
   const handleSubmit = async (e) => {
@@ -64,6 +59,7 @@ export default function ModifyPost() {
       })
         .then(function (response) {
           console.log(response);
+          setOpen(false);
         })
         .catch(function (response) {
           console.log(response);

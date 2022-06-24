@@ -29,7 +29,7 @@ export default function GetUser() {
         setUser(res.data.GetUser);
       })
       .catch((err) => console.log(err));
-  }, [id]);
+  }, [id, token]);
 
   useEffect(() => {
     axios
@@ -41,7 +41,7 @@ export default function GetUser() {
         setPosts(res.data.GetPost);
       })
       .catch((err) => console.log(err));
-  }, [id]);
+  }, [id, token]);
   return (
     <div>
       <Header />{" "}
@@ -50,7 +50,6 @@ export default function GetUser() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "rgba(78, 81, 102, 0.6)",
           padding: "3%"
         }}
       >

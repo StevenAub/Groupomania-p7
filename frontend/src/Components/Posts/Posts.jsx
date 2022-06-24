@@ -34,9 +34,11 @@ async function getList() {
 function Post() {
   const [list, setList] = useState([]);
   const [alert, setAlert] = useState(false);
+  const [error, setError] = useState("");
+  const [displayError, setDisplayError] = useState(false);
+
   const [post, setPost] = useState({ title: "", content: "" });
   const [file, setFile] = useState();
-  const [image, setImage] = useState(null);
   const [nameImage, setNameImage] = useState("");
   let newPost = true;
 
@@ -46,8 +48,6 @@ function Post() {
   const onChangeImage = (e) => {
     const file = e.target.files[0] || undefined;
     setNameImage(file.name);
-
-    setImage(URL.createObjectURL(e.target.files[0]));
     setFile(e.target.files[0]);
   };
   const handleSubmit = (e) => {
@@ -69,15 +69,21 @@ function Post() {
           "Content-Type": "multipart/form-data",
           authorization: `Bearer ${token}`
         }
-      }).then(() => {
-        if (newPost) {
-          setAlert(true);
-          document.forms["post"].reset();
-          setPost({ title: "", content: "" });
-          setFile("");
-          setNameImage("");
-        }
-      });
+      })
+        .then(() => {
+          if (newPost) {
+            setAlert(true);
+            document.forms["post"].reset();
+            setPost({ title: "", content: "" });
+            setFile("");
+            setNameImage("");
+            setDisplayError(false);
+          }
+        })
+        .catch((err) => {
+          setError(err.response.data.message);
+          setDisplayError(true);
+        });
     } else {
       axios({
         method: "post",
@@ -87,16 +93,32 @@ function Post() {
           "Content-Type": "application/json",
           authorization: `Bearer ${token}`
         }
-      }).then(() => {
-        if (newPost) {
-          setAlert(true);
-          document.forms["post"].reset();
-          setFile("");
-          setPost({ title: "", content: "" });
-        }
-      });
+      })
+        .then(() => {
+          if (newPost) {
+            setAlert(true);
+            document.forms["post"].reset();
+            setFile("");
+            setPost({ title: "", content: "" });
+            setDisplayError(false);
+          }
+        })
+        .catch((err) => {
+          setError(err.response.data.message);
+          setDisplayError(true);
+        });
     }
   };
+
+  function DisplayError() {
+    if (displayError === true) {
+      return (
+        <div>
+          <p>{error}</p>
+        </div>
+      );
+    }
+  }
 
   useEffect(() => {
     let newPost = true;
@@ -109,7 +131,7 @@ function Post() {
       }
     });
     return () => (newPost = false);
-  }, [alert]);
+  }, [alert, list.length]);
 
   useEffect(() => {
     if (alert) {
@@ -117,7 +139,7 @@ function Post() {
         if (newPost) {
           setAlert(false);
         }
-      }, 1000);
+      }, 100);
     }
   }, [alert, newPost]);
 
@@ -164,6 +186,7 @@ function Post() {
             fullWidth
           ></TextField>
         </DivInput>
+        <DisplayError />
         <Button
           id="imgUrl"
           name="imgUrl"
@@ -247,9 +270,10 @@ function Post() {
                       alt="green iguana"
                       style={{
                         objectFit: "contain",
-                        width: "99%",
                         margin: "auto",
-                        cursor: "pointer"
+                        cursor: "pointer",
+                        maxHeight: "550px",
+                        width: "100%"
                       }}
                     />
                   </Link>

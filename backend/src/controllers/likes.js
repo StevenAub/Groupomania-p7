@@ -5,7 +5,7 @@ const Like = sequelize.models.Likes;
 
 async function findAllLikes(req, res, next) {
   const post = await Post.findOne({ where: { id: req.params.id } });
-
+  console.log(post);
   await Like.findAll({
     where: {
       PostId: post.id

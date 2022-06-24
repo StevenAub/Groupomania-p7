@@ -1,15 +1,15 @@
 const express = require("express");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
-
 const app = express();
-
 const cors = require("cors");
 const path = require("path");
 const userRoutes = require("./src/routes/user");
 const stuffRoutes = require("./src/routes/post");
 const likeRoutes = require("./src/routes/like");
-const auth = require("./src/middleware/auth");
+
+const mysql = require("mysql");
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(

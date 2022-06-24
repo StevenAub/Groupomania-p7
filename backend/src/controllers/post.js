@@ -1,11 +1,18 @@
 const sequelize = require("../../sequelize");
 const Post = sequelize.models.Post;
+const Comment = sequelize.models.Comment;
+const Likes = sequelize.models.Likes;
 const User = sequelize.models.User;
 const fs = require("fs");
+const { log } = require("console");
 
 async function createPost(req, res) {
+  console.log(req.body);
   /* const post = await Post.findOne({ where: { id: req.params.id } });*/
-  const user = await User.findOne({ where: { id: req.auth } });
+  console.log(req.auth);
+  const user = await User.findOne({
+    where: { id: req.auth }
+  });
   try {
     let imgUrl = "";
     if (req.file) {
@@ -105,8 +112,14 @@ async function modifyPost(req, res) {
 }
 
 async function deletePost(req, res) {
-  const post = await Post.findOne({ where: { id: req.params.id } });
-  if (post.UserId === req.auth)
+  const user = await User.findOne({
+    where: { id: req.auth }
+  });
+  const admin = user.isAdmin;
+  const post = await Post.findOne({
+    where: { id: req.params.id }
+  });
+  if (post.UserId === req.auth || admin === true)
     Post.findByPk(req.params.id).then((post) => {
       if (post === null) {
         return res
@@ -115,6 +128,8 @@ async function deletePost(req, res) {
       }
       const filename = post.imgUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
+        Comment.destroy({ where: { PostId: req.params.id } });
+        Likes.destroy({ where: { PostId: req.params.id } });
         Post.destroy({ where: { id: post.id } })
           .then((_) => {
             res

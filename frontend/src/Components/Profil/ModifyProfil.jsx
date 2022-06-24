@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 
 export default function ModifyProfil() {
@@ -13,7 +13,6 @@ export default function ModifyProfil() {
   const token = JSON.parse(localStorage.getItem("tokens"));
   const [user, setUser] = useState({ username: "", email: "", password: "" });
   const [file, setFile] = useState();
-  const [image, setImage] = useState(null);
   const [nameImage, setNameImage] = useState("");
   function EmailError() {
     if (!/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(user.email)) {
@@ -28,7 +27,6 @@ export default function ModifyProfil() {
   const onChangeImage = (e) => {
     const file = e.target.files[0] || undefined;
     setNameImage(file.name);
-    setImage(URL.createObjectURL(file));
     setFile(e.target.files[0]);
   };
 

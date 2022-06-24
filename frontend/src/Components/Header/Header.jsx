@@ -3,25 +3,17 @@ import logo from "../../Assets/logo.svg";
 import styled from "styled-components";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-
 import { IoIosArrowRoundBack } from "react-icons/io";
-
-import ModifyProfil from "../Profil/ModifyProfil";
-import { borderBottom } from "@mui/system";
 
 const StyledImg = styled.img`
   width: 27%;
-  margin-top: 1em;
 `;
 const StyledDiv = styled.div`
   background-color: #ffd7d7;
   height: 5em;
   border-bottom: 2px solid #4e5166;
-`;
-const StyledInput = styled.input`
-  width: 50%;
-  margin: 1%;
-  padding: 8%;
+  display: flex;
+  justify-content: center;
 `;
 
 function DisplayMyProfil() {
@@ -56,17 +48,17 @@ export default function Header() {
   }
   return (
     <div>
+      {window.location.pathname !== "/home" ? (
+        <Link to={`/home`}>
+          <IoIosArrowRoundBack
+            size={60}
+            style={{ color: "black", margin: "auto 5px", position: "absolute" }}
+          />
+        </Link>
+      ) : (
+        <div style={{ margin: "auto 5px" }}></div>
+      )}
       <StyledDiv>
-        {window.location.pathname !== "/home" ? (
-          <Link to={`/home`}>
-            <IoIosArrowRoundBack
-              size={60}
-              style={{ color: "black", margin: "auto 5px" }}
-            />
-          </Link>
-        ) : (
-          <div style={{ margin: "auto 5px" }}></div>
-        )}
         <StyledImg src={logo} />
       </StyledDiv>{" "}
       <div
@@ -76,7 +68,8 @@ export default function Header() {
           gap: "10px",
           padding: "5px",
           borderBottom: " 2px solid #4e5166",
-          justifyContent: "flex-end"
+          justifyContent: "flex-end",
+          backgroundColor: "rgba(78, 81, 102, .7)"
         }}
       >
         <DisplayMyProfil />

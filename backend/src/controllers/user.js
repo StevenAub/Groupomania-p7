@@ -3,6 +3,7 @@ const sequelize = require("../../sequelize");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = sequelize.models.User;
+console.log(User);
 const Post = sequelize.models.Post;
 const Comment = sequelize.models.Comment;
 const Likes = sequelize.models.Likes;
@@ -15,12 +16,12 @@ function Signup(req, res) {
   const username = req.body.username;
   const password = req.body.password;
   if (!validator.validate(email)) {
-    res.status(500).json({ message: "Addresse email invalide" });
+    res.status(500).json({ message: "Adresse email invalide" });
   } else {
     if (!email || !username || !password) {
       return res
         .status(400)
-        .json({ message: "Veuillez renseigner tous cles champs!" });
+        .json({ message: "Veuillez renseigner tous les champs!" });
     } else {
       User.findOne({
         attributes: ["email"],
@@ -36,7 +37,8 @@ function Signup(req, res) {
             })
               .then(
                 res.status(201).json({
-                  message: "Utilisateur enregistré, vous pouvez vous connecter"
+                  message: "Utilisateur enregistré, vous pouvez vous connecter",
+                  status: 201
                 })
               )
               .catch((err) => res.status(400).json({ error: err }));
@@ -44,7 +46,7 @@ function Signup(req, res) {
         } else {
           return res
             .status(400)
-            .json({ message: "Addresse email deja utilisée!" });
+            .json({ message: "Adresse email deja utilisée!" });
         }
       });
     }
@@ -58,6 +60,7 @@ function Login(req, res) {
         const message = `L'utilisateur demandé n'existe pas.`;
         return res.status(404).json({ message });
       }
+      console.log(user);
       return bcrypt
         .compare(req.body.password, user.password)
         .then((isPasswordValid) => {

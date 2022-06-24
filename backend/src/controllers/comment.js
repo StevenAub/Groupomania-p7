@@ -8,15 +8,18 @@ async function createComment(req, res) {
     UserId: req.auth,
     PostId: parseInt(req.params.id)
   });
-
-  createComment
-    .save()
-    .then(() =>
-      res.status(201).json({ message: "Le commentaire a été ajouté" })
-    )
-    .catch((error) =>
-      res.status(500).json({ message: "Merci de remplir les champs", error })
-    );
+  if (req.body.content === "") {
+    res.status(400).json({ message: "Merci de remplir le champ!" });
+  } else {
+    createComment
+      .save()
+      .then(() =>
+        res.status(201).json({ message: "Le commentaire a été ajouté" })
+      )
+      .catch((error) =>
+        res.status(500).json({ message: "Merci de remplir les champs", error })
+      );
+  }
 }
 
 async function getAllComment(req, res) {

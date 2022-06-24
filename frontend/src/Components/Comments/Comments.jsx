@@ -28,6 +28,7 @@ export default function DisplayAllComment() {
     const id = idRequest.id;
     const token = JSON.parse(localStorage.getItem("tokens"));
     const [comment, setComment] = useState("");
+    const [displayError, setDisplayError] = useState(false);
 
     const onChange = (e) => {
       let value = e.target.value;
@@ -49,12 +50,25 @@ export default function DisplayAllComment() {
           if (newComment) {
             setAlert(true);
             document.forms["comment"].reset();
+            setComment("");
+            setDisplayError(false);
           }
         })
         .catch((response) => {
           setError(response.response.data.message);
+          setDisplayError(true);
         });
     };
+
+    function DisplayError() {
+      if (displayError === true) {
+        return (
+          <div>
+            <p>{error}</p>
+          </div>
+        );
+      }
+    }
 
     return (
       <div>
@@ -85,7 +99,7 @@ export default function DisplayAllComment() {
                 fullWidth
                 required
               ></TextField>
-              <p>{error}</p>
+              <DisplayError />{" "}
               <div>
                 <Button
                   style={{ margin: "5px" }}
@@ -127,7 +141,7 @@ export default function DisplayAllComment() {
         if (newComment) {
           setAlert(false);
         }
-      }, 1000);
+      }, 100);
     }
   }, [alert, newComment]);
 

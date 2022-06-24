@@ -110,7 +110,7 @@ function GetOnedata() {
                 <Typography variant="body2" color="text.secondary">
                   {post.content}
                 </Typography>{" "}
-                {post.UserId === userId.userId ? (
+                {post.UserId === userId.userId || userId.isAdmin === true ? (
                   <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <ModifyPost />
                     <DeletePost />
