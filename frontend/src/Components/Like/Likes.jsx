@@ -38,7 +38,7 @@ export default function LikePost(post) {
   }
 
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div style={{ display: "flex", alignItems: "center", marginTop: "3%" }}>
       <Button onClick={liked}>J'aime</Button>
       💜
       {likes}

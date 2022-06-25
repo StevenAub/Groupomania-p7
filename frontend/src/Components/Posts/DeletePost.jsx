@@ -1,22 +1,29 @@
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 
-export default function DeletePost() {
+export default function DeletePost(id) {
   const token = JSON.parse(localStorage.getItem("tokens"));
+  const user = JSON.parse(localStorage.getItem("UserId"));
 
-  const idRequest = useParams();
-  const id = idRequest.id;
   function Delete() {
-    axios.delete(`http://localhost:8080/api/post/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    axios
+      .delete(`http://localhost:8080/api/post/${id.id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then((res) => {
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
   }
 
   return (
     <div>
-      <Link to={`/home`}>
-        <Button onClick={Delete}>❌ Supprimer le post</Button>
+      <Link to={`/home/user/${user.userId}`}>
+        <Button onClick={Delete} color="error">
+          {" "}
+          Supprimer le post
+        </Button>
       </Link>
     </div>
   );

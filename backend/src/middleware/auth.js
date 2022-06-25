@@ -1,8 +1,5 @@
 const jwt = require("jsonwebtoken");
-const sequelize = require("../../sequelize");
 const privateKey = "jdjdjddj";
-
-require("dotenv").config();
 
 module.exports = (req, res, next) => {
   const authorizationHeader = req.headers.authorization;

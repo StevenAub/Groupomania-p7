@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -21,9 +20,8 @@ const style = {
   p: 4
 };
 
-export default function ModifyPost() {
+export default function ModifyPost(id) {
   const token = JSON.parse(localStorage.getItem("tokens"));
-  const id = useParams().id;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -46,7 +44,7 @@ export default function ModifyPost() {
 
       axios({
         method: "put",
-        url: `http://localhost:8080/api/post/${id}`,
+        url: `http://localhost:8080/api/post/${id.id}`,
 
         data: formData,
         headers: {
@@ -58,8 +56,8 @@ export default function ModifyPost() {
         }
       })
         .then(function (response) {
-          console.log(response);
           setOpen(false);
+          window.location.reload();
         })
         .catch(function (response) {
           console.log(response);
@@ -67,7 +65,7 @@ export default function ModifyPost() {
     }
     axios({
       method: "put",
-      url: `http://localhost:8080/api/post/${id}`,
+      url: `http://localhost:8080/api/post/${id.id}`,
 
       data: post,
       headers: {
@@ -75,7 +73,10 @@ export default function ModifyPost() {
         authorization: `Bearer ${token}`
       }
     })
-      .then(function (response) {})
+      .then(function (response) {
+        setOpen(false);
+        window.location.reload();
+      })
       .catch(function (response) {
         console.log(response);
       });

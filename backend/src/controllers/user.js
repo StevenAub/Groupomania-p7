@@ -3,7 +3,6 @@ const sequelize = require("../../sequelize");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = sequelize.models.User;
-console.log(User);
 const Post = sequelize.models.Post;
 const Comment = sequelize.models.Comment;
 const Likes = sequelize.models.Likes;
@@ -60,7 +59,6 @@ function Login(req, res) {
         const message = `L'utilisateur demandé n'existe pas.`;
         return res.status(404).json({ message });
       }
-      console.log(user);
       return bcrypt
         .compare(req.body.password, user.password)
         .then((isPasswordValid) => {

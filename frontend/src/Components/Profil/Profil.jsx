@@ -11,6 +11,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
+import SettingPost from "../Posts/SettingPost";
+import LikePost from "../Like/Likes";
 
 export default function GetUser() {
   const token = JSON.parse(localStorage.getItem("tokens"));
@@ -19,6 +21,7 @@ export default function GetUser() {
   const id = idRequest.id;
   const [user, setUser] = useState("");
   const [posts, setPosts] = useState([]);
+
   useEffect(() => {
     axios
       .get(`http://localhost:8080/api/user/${id}`, {
@@ -77,6 +80,8 @@ export default function GetUser() {
               boxShadow: "5px 5px 5px #4E5166"
             }}
           >
+            {" "}
+            <SettingPost id={post.id} />
             <CardActionArea>
               {post.imgUrl ? (
                 <Link to={`/home/post/${post.id}`}>
@@ -103,6 +108,7 @@ export default function GetUser() {
               <Link to={`/home/post/${post.id}`}>
                 <Button size="small">Commenter</Button>
               </Link>
+              <LikePost id={post.id} />
             </CardActions>
           </Card>
         ))}

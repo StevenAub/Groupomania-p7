@@ -2,7 +2,6 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import { Link } from "react-router-dom";
-
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
@@ -12,6 +11,7 @@ import axios from "axios";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import LikePost from "../Like/Likes";
+import SettingPost from "./SettingPost";
 
 const token = JSON.parse(localStorage.getItem("tokens"));
 
@@ -52,6 +52,7 @@ function Post() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (file) {
       const Formdata = new FormData();
       Formdata.append("title", post.title);
@@ -74,15 +75,17 @@ function Post() {
           if (newPost) {
             setAlert(true);
             document.forms["post"].reset();
-            setPost({ title: "", content: "" });
-            setFile("");
-            setNameImage("");
             setDisplayError(false);
+            setFile("");
+            setPost({ title: "", content: "" });
+            setNameImage("");
           }
         })
         .catch((err) => {
           setError(err.response.data.message);
           setDisplayError(true);
+          setFile("");
+          setPost({ title: "", content: "" });
         });
     } else {
       axios({
@@ -94,18 +97,21 @@ function Post() {
           authorization: `Bearer ${token}`
         }
       })
-        .then(() => {
+        .then((res) => {
           if (newPost) {
             setAlert(true);
             document.forms["post"].reset();
             setFile("");
             setPost({ title: "", content: "" });
             setDisplayError(false);
+            setNameImage("");
           }
         })
         .catch((err) => {
           setError(err.response.data.message);
           setDisplayError(true);
+          setFile("");
+          setPost({ title: "", content: "" });
         });
     }
   };
@@ -233,6 +239,8 @@ function Post() {
                 wordWrap: "break-word"
               }}
             >
+              {" "}
+              <SettingPost id={post.id} />
               <CardContent
                 style={{
                   padding: "17px 0px 6px 0px"

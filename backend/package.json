@@ -16,7 +16,6 @@
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
     "email-validator": "^2.0.4",
     "express": "^4.17.3",
     "fs": "^0.0.1-security",
@@ -30,7 +29,6 @@
     "sequelize-auto": "^0.8.8",
     "sequelize-cli": "^6.4.1",
     "sequelize-fixtures": "^1.2.0",
-    "sharp": "^0.30.7",
     "sqlite3": "^5.0.8"
   }
 }

@@ -3,12 +3,13 @@ const Comment = sequelize.models.Comment;
 const User = sequelize.models.User;
 
 async function createComment(req, res) {
+  const comment = req.body.content.trim();
   const createComment = await Comment.create({
-    content: req.body.content,
+    content: comment,
     UserId: req.auth,
     PostId: parseInt(req.params.id)
   });
-  if (req.body.content === "") {
+  if (comment === "") {
     res.status(400).json({ message: "Merci de remplir le champ!" });
   } else {
     createComment

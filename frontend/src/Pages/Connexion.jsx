@@ -244,12 +244,12 @@ export default function LoginPage() {
       style={{
         display: "flex",
         justifyContent: "center",
-        marginTop: "10%"
+        marginTop: "5%"
       }}
     >
       <div
         style={{
-          width: "50%",
+          width: "30%",
           display: "flex",
           flexDirection: "column",
           backgroundColor: "white",

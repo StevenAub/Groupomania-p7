@@ -7,16 +7,14 @@ import Typography from "@mui/material/Typography";
 import { Stack } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
 import Comment from "../Comments/Comments";
-import DeletePost from "./DeletePost";
 import { useState, useEffect } from "react";
-import ModifyPost from "./ModifyPost";
 import Avatar from "@mui/material/Avatar";
+import LikePost from "../Like/Likes";
+import SettingPost from "./SettingPost";
 
 function GetOnedata() {
   const id = useParams();
-
   const token = JSON.parse(localStorage.getItem("tokens"));
-
   const userId = JSON.parse(localStorage.getItem("UserId"));
   const [post, setPost] = useState({});
 
@@ -54,6 +52,14 @@ function GetOnedata() {
               boxShadow: "5px 5px 5px #4E5166"
             }}
           >
+            {post.UserId === userId.userId || userId.isAdmin === true ? (
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                {" "}
+                <SettingPost id={post.id} />
+              </div>
+            ) : (
+              <div></div>
+            )}
             <CardContent>
               {" "}
               <Link to={`/home/user/${post.UserId}`}>
@@ -110,14 +116,7 @@ function GetOnedata() {
                 <Typography variant="body2" color="text.secondary">
                   {post.content}
                 </Typography>{" "}
-                {post.UserId === userId.userId || userId.isAdmin === true ? (
-                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <ModifyPost />
-                    <DeletePost />
-                  </div>
-                ) : (
-                  <div></div>
-                )}
+                <LikePost id={id.id} />
               </CardContent>
             </div>
           </Card>

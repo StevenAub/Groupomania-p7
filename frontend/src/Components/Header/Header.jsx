@@ -7,6 +7,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 
 const StyledImg = styled.img`
   width: 27%;
+  min-width: 250px;
 `;
 const StyledDiv = styled.div`
   background-color: #ffd7d7;
@@ -60,7 +61,7 @@ export default function Header() {
       )}
       <StyledDiv>
         <StyledImg src={logo} />
-      </StyledDiv>{" "}
+      </StyledDiv>
       <div
         style={{
           display: "flex",

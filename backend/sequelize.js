@@ -1,11 +1,11 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const PostModel = require("./src/models/post");
-const mysql = require("mysql");
 const UserModel = require("./src/models/user");
 const CommentModel = require("./src/models/comment");
 const LikesModel = require("./src/models/Likes");
 const sequelize_fixtures = require("sequelize-fixtures");
 const adminModel = require("./src/models/admin");
+
 const sequelize = new Sequelize("groupomania", "root", "", {
   host: "localhost",
   dialect: "mysql"
@@ -29,15 +29,11 @@ Comment.belongsTo(Post);
 Comment.belongsTo(User);
 User.hasMany(Post);
 User.hasMany(Comment);
-
-//Post.hasMany(Likes);
 Likes.belongsTo(Post);
-//User.hasMany(Likes);
 Likes.belongsTo(User);
 
 sequelize.sync().then(() => {
   loadFixtures();
-
   console.log("Les tables User, Post, Comment, Likes ont été ajouté a la BDD");
 });
 

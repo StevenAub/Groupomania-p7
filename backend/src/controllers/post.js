@@ -4,31 +4,27 @@ const Comment = sequelize.models.Comment;
 const Likes = sequelize.models.Likes;
 const User = sequelize.models.User;
 const fs = require("fs");
-const { log } = require("console");
+const sharp = require("sharp");
 
 async function createPost(req, res) {
-  console.log(req.body);
-  /* const post = await Post.findOne({ where: { id: req.params.id } });*/
-  console.log(req.auth);
+  const title = req.body.title.trim();
   const user = await User.findOne({
     where: { id: req.auth }
   });
   try {
     let imgUrl = "";
     if (req.file) {
-      (imgUrl = `${req.protocol}://${req.get("host")}/images/${
+      imgUrl = `${req.protocol}://${req.get("host")}/images/${
         req.file.filename
-      }`),
-        (title = req.body.title);
+      }`;
     }
     const post = await Post.create({
-      title: req.body.title,
+      title: title,
       content: req.body.content,
       imgUrl,
       UserId: req.auth,
       PostId: parseInt(req.params.id)
     });
-    console.log("title " + req.body.title);
     if (req.body.title === "") {
       res.status(400).json({ message: "Merci de remplir au moins le titre" });
     } else {
@@ -37,6 +33,36 @@ async function createPost(req, res) {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
+  /* const post = await Post.findOne({ where: { id: req.params.id } });
+  const user = await User.findOne({
+    where: { id: req.auth }
+  });
+  const title = req.body.title.trim();
+  try {
+    let imgUrl = "";
+    if (req.file) {
+      (imgUrl = `${req.protocol}://${req.get("host")}/images/${
+        req.file.filename
+      }`),
+        (title = title);
+    }
+    const post = await Post.create({
+      title: title,
+      content: req.body.content,
+      imgUrl,
+      UserId: req.auth,
+      PostId: parseInt(req.params.id)
+    });
+    if (title === "") {
+      return res
+        .status(400)
+        .json({ message: "Merci de remplir au moins le titre" });
+    } else {
+      return res.status(200).json({ post });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }*/
 }
 
 async function getOnePost(req, res) {
@@ -119,6 +145,7 @@ async function deletePost(req, res) {
   const post = await Post.findOne({
     where: { id: req.params.id }
   });
+  console.log(post);
   if (post.UserId === req.auth || admin === true)
     Post.findByPk(req.params.id).then((post) => {
       if (post === null) {
