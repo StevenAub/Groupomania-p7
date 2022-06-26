@@ -1,4 +1,3 @@
-require("dotenv");
 const sequelize = require("../../sequelize");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -9,6 +8,7 @@ const Likes = sequelize.models.Likes;
 const privateKey = "jdjdjddj";
 const fs = require("fs");
 var validator = require("email-validator");
+const sharp = require("sharp");
 
 function Signup(req, res) {
   const email = req.body.email;
@@ -109,7 +109,10 @@ async function getOneUser(req, res) {
 }
 async function getPostUserId(req, res) {
   const id = req.params.id;
-  const GetPost = await Post.findAll({ where: { UserId: id } });
+  const GetPost = await Post.findAll({
+    where: { UserId: id },
+    order: [["id", "DESC"]]
+  });
   if (GetPost === null) {
     res.status(404).json({ message: "User introuvable!" });
   } else {
@@ -145,19 +148,35 @@ async function modifyImageUser(req, res) {
   const user = await User.findOne({ where: { id: id } });
   const filename = user.imgProfil.split("/images/")[1];
 
-  fs.unlink(`images/${filename}`, () => {
+  fs.unlink(`images/${filename}`, async () => {
     if (req.file) {
       img = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
 
+      const nameImg = img.split("/images/")[1];
+
+      async function resizeImg() {
+        await sharp(`./images/${nameImg}`)
+          .resize(500)
+          .toFile(`./images/mini_${nameImg}`);
+        fs.unlink(`images/${nameImg}`, () => {
+          imgUrl = `${req.protocol}://${req.get("host")}/images/${
+            req.file.filename
+          }`;
+        });
+      }
+      await resizeImg();
       user
         .update({
-          imgProfil: img
+          imgProfil: `${req.protocol}://${req.get("host")}/images/mini_${
+            req.file.filename
+          }`
         })
         .then(() => res.status(200).json({ message: "User modifié", user }))
         .catch((error) => res.status(404).json({ error }));
     }
   });
 }
+
 async function deleteUser(req, res) {
   const user = await User.findOne({
     where: { id: req.auth },

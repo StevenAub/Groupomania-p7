@@ -95,15 +95,14 @@ export default function DisplayAllComment() {
                 multiline
                 variant="outlined"
                 rows={2}
-                onChange={onChange}
                 fullWidth
-                required
+                onChange={onChange}
               ></TextField>
               <DisplayError />{" "}
-              <div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <Button
-                  style={{ margin: "5px" }}
-                  variant="outlined"
+                  style={{ margin: "5px", width: "100%" }}
+                  variant="contained"
                   onClick={handleSubmit}
                 >
                   Envoyer
@@ -176,56 +175,54 @@ export default function DisplayAllComment() {
             margin: "3% auto"
           }}
         >
-          <CardContent>
-            <Typography
-              variant="h5"
-              component="div"
+          {comment.UserId === userId.userId || userId.isAdmin === true ? (
+            <div
               style={{
+                cursor: "pointer",
                 display: "flex",
-                margin: "10px 10px 30px 10px"
+                justifyContent: "flex-end"
               }}
+              id={comment.id}
+              onClick={Delete}
             >
-              <Link to={`/home/user/${comment.UserId}`}>
-                {" "}
-                <h3
-                  style={{
-                    margin: "0",
-                    display: "flex",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    color: "#4E5166"
-                  }}
-                >
-                  <Avatar
-                    alt={comment.User.username}
-                    style={{
-                      marginRight: "10px"
-                    }}
-                    src={comment.User.imgProfil}
-                  />
-                  {comment.User.username}
-                </h3>
-              </Link>
-            </Typography>
-
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              {comment.content}
-            </Typography>
-            {comment.UserId === userId.userId ? (
+              <Button
+                id={comment.id}
+                style={{ position: "absolute", margin: "20px 15px 0 0" }}
+              >
+                ❌
+              </Button>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          <CardContent>
+            <Link to={`/home/user/${comment.UserId}`}>
               <div
                 style={{
-                  cursor: "pointer",
                   display: "flex",
-                  justifyContent: "flex-end"
+                  alignItems: "center",
+                  marginBottom: "25px"
                 }}
-                id={comment.id}
-                onClick={Delete}
               >
-                <Button id={comment.id}> ❌ Supprimé commentaire</Button>
+                <Avatar
+                  alt={comment.User.username}
+                  style={{
+                    marginRight: "10px"
+                  }}
+                  src={comment.User.imgProfil}
+                />
+                <Typography variant="h6" color="text.secondary" style={{}}>
+                  {comment.User.username}
+                </Typography>
               </div>
-            ) : (
-              <div></div>
-            )}
+            </Link>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              style={{ marginBottom: "20px", wordWrap: "break-word" }}
+            >
+              {comment.content}
+            </Typography>
           </CardContent>
         </Card>
       ))}

@@ -1,4 +1,4 @@
-import * as React from "react";
+/*import * as React from "react";
 import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import { Link } from "react-router-dom";
@@ -12,7 +12,6 @@ import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import LikePost from "../Like/Likes";
 import SettingPost from "./SettingPost";
-
 const token = JSON.parse(localStorage.getItem("tokens"));
 
 const DivInput = styled.div`
@@ -22,16 +21,7 @@ const DivInput = styled.div`
   margin-bottom: 20px;
 `;
 
-async function getList() {
-  return await fetch("http://localhost:8080/api/post", {
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` }
-  })
-    .then((data) => data.json())
-    .catch((err) => console.log(err));
-}
-
-function Post() {
+function Post3() {
   const [list, setList] = useState([]);
   const [alert, setAlert] = useState(false);
   const [error, setError] = useState("");
@@ -41,10 +31,6 @@ function Post() {
   const [file, setFile] = useState();
   const [nameImage, setNameImage] = useState("");
   let newPost = true;
-
-  const testd = "http://localhost:8080/images/IMG_0666.JPG1656252763020.jpg";
-
-  console.log(testd.split("/images/")[1]);
 
   const onChange = ({ target: { name, value } }) => {
     setPost((post) => ({ ...post, [name]: value }));
@@ -131,19 +117,6 @@ function Post() {
   }
 
   useEffect(() => {
-    let newPost = true;
-    if (list.length && !alert) {
-      return;
-    }
-    getList().then((items) => {
-      if (newPost) {
-        setList(items.posts);
-      }
-    });
-    return () => (newPost = false);
-  }, [alert, list.length]);
-
-  useEffect(() => {
     if (alert) {
       setTimeout(() => {
         if (newPost) {
@@ -152,6 +125,7 @@ function Post() {
       }, 100);
     }
   }, [alert, newPost]);
+
   return (
     <div
       style={{
@@ -177,7 +151,6 @@ function Post() {
           <TextField
             id="outlined-basic"
             label="Titre"
-            value={post.title}
             name="title"
             multiline
             variant="outlined"
@@ -189,7 +162,6 @@ function Post() {
             id="outlined-basic"
             label="Description...(optionnel)"
             name="content"
-            value={post.content}
             multiline
             variant="outlined"
             rows={3}
@@ -215,117 +187,9 @@ function Post() {
         </Button>
       </form>
       {alert && <h2> Post publié !</h2>}
-      <ul
-        style={{
-          padding: "0",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}
-      >
-        {list.length === 0 ? (
-          <div>Aucun post disponnible actuellement</div>
-        ) : (
-          list?.map((post, index) => (
-            <Card
-              key={`${post.title}-${index}`}
-              sx={{
-                width: "100%",
-                maxWidth: 850,
-                marginTop: 5
-              }}
-              style={{
-                backgroundColor: "white",
-                borderRadius: "10px",
-                border: "solid 1px #4E5166 ",
-                boxShadow: "5px 5px 5px #4E5166",
-                wordWrap: "break-word"
-              }}
-            >
-              {post.UserId === userId.userId || userId.isAdmin === true ? (
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  {" "}
-                  <SettingPost id={post.id} />
-                </div>
-              ) : (
-                <div></div>
-              )}
-              <CardContent
-                style={{
-                  padding: "17px 0px 6px 0px"
-                }}
-              >
-                <Link to={`user/${post.UserId}`}>
-                  <Typography gutterBottom variant="h6" component="div">
-                    <h3
-                      style={{
-                        margin: "0",
-                        display: "flex",
-                        justifyContent: "center",
-                        cursor: "pointer",
-                        color: "#4E5166"
-                      }}
-                    >
-                      <Avatar
-                        alt={post.User.username}
-                        style={{
-                          marginRight: "10px"
-                        }}
-                        src={post.User.imgProfil}
-                      />
-                      {post.User.username}
-                    </h3>
-                  </Typography>
-                </Link>
-              </CardContent>
-              <div>
-                {post.imgUrl ? (
-                  <Link to={`post/${post.id}`}>
-                    <CardMedia
-                      component="img"
-                      image={post.imgUrl}
-                      alt="green iguana"
-                      style={{
-                        objectFit: "contain",
-                        margin: "auto",
-                        cursor: "pointer",
-                        maxHeight: "550px",
-                        width: "100%"
-                      }}
-                    />
-                  </Link>
-                ) : (
-                  <div></div>
-                )}
-                <CardContent>
-                  <Typography gutterBottom variant="h6" component="div">
-                    {post.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {post.content}
-                  </Typography>
-                </CardContent>
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginTop: "3%"
-                  }}
-                >
-                  <Link to={`post/${post.id}`}>
-                    <Button>Commenter</Button>
-                  </Link>
-                  <LikePost id={post.id} />
-                </div>
-              </div>
-            </Card>
-          ))
-        )}
-      </ul>
     </div>
   );
 }
 
-export default Post;
+export default Post3;
+*/

@@ -8,61 +8,47 @@ const sharp = require("sharp");
 
 async function createPost(req, res) {
   const title = req.body.title.trim();
-  const user = await User.findOne({
-    where: { id: req.auth }
-  });
-  try {
-    let imgUrl = "";
-    if (req.file) {
-      imgUrl = `${req.protocol}://${req.get("host")}/images/${
-        req.file.filename
-      }`;
+  if (title === "") {
+    return res
+      .status(400)
+      .json({ message: "Merci de remplir au moins le titre" });
+  } else {
+    try {
+      let imgUrl = "";
+      if (req.file) {
+        imgUrl = `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`;
+        const nameImg = imgUrl.split("/images/")[1];
+
+        async function resizeImg() {
+          await sharp(`./images/${nameImg}`)
+            .resize(1500)
+            .toFile(`./images/mini_${nameImg}`);
+          fs.unlink(`images/${nameImg}`, () => {
+            imgUrl = `${req.protocol}://${req.get("host")}/images/${
+              req.file.filename
+            }`;
+          });
+        }
+        await resizeImg();
+        imgUrl = `${req.protocol}://${req.get("host")}/images/mini_${
+          req.file.filename
+        }`;
+      }
+      const post = await Post.create({
+        title: title,
+        content: req.body.content,
+        imgUrl: imgUrl,
+        UserId: req.auth,
+        PostId: parseInt(req.params.id)
+      });
+
+      res.status(200).json({ post });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
-    const post = await Post.create({
-      title: title,
-      content: req.body.content,
-      imgUrl,
-      UserId: req.auth,
-      PostId: parseInt(req.params.id)
-    });
-    if (req.body.title === "") {
-      res.status(400).json({ message: "Merci de remplir au moins le titre" });
-    } else {
-      return res.status(200).json({ post });
-    }
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
   }
-  /* const post = await Post.findOne({ where: { id: req.params.id } });
-  const user = await User.findOne({
-    where: { id: req.auth }
-  });
-  const title = req.body.title.trim();
-  try {
-    let imgUrl = "";
-    if (req.file) {
-      (imgUrl = `${req.protocol}://${req.get("host")}/images/${
-        req.file.filename
-      }`),
-        (title = title);
-    }
-    const post = await Post.create({
-      title: title,
-      content: req.body.content,
-      imgUrl,
-      UserId: req.auth,
-      PostId: parseInt(req.params.id)
-    });
-    if (title === "") {
-      return res
-        .status(400)
-        .json({ message: "Merci de remplir au moins le titre" });
-    } else {
-      return res.status(200).json({ post });
-    }
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }*/
 }
 
 async function getOnePost(req, res) {

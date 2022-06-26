@@ -7,7 +7,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 
 const StyledImg = styled.img`
   width: 27%;
-  min-width: 250px;
+  min-width: 150px;
 `;
 const StyledDiv = styled.div`
   background-color: #ffd7d7;
@@ -23,11 +23,15 @@ function DisplayMyProfil() {
   return (
     <div>
       {window.location.pathname === `/home/user/${myId.userId}` ? (
-        <Link to={`/home/user/${myId.userId}/update`}>
-          <Button size="small" variant="contained">
-            Modifié mon profil
-          </Button>
-        </Link>
+        myId.isAdmin === true ? (
+          <div></div>
+        ) : (
+          <Link to={`/home/user/${myId.userId}/update`}>
+            <Button size="small" variant="contained">
+              Modifié mon profil
+            </Button>
+          </Link>
+        )
       ) : (
         <Link to={`/home/user/${myId.userId}`}>
           <Button
@@ -77,7 +81,7 @@ export default function Header() {
         <Link to={`/`}>
           <Button
             color="error"
-            style={{ height: "2rem", fontSize: ".6em" }}
+            style={{ height: "2rem", fontSize: ".6em", marginRight: "20px" }}
             variant="contained"
             onClick={disconnect}
           >

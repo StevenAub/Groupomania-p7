@@ -34,7 +34,7 @@ export default function SettingPost(id) {
         }}
       >
         <i
-          class="fa-solid fa-pen-to-square fa-2x"
+          className="fa-solid fa-pen-to-square fa-2x"
           style={{
             marginTop: "15px",
             zIndex: "1",

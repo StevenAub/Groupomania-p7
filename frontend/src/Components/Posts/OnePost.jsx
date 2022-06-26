@@ -65,7 +65,7 @@ function GetOnedata() {
               <Link to={`/home/user/${post.UserId}`}>
                 <Typography
                   gutterBottom
-                  variant="h5"
+                  variant="h6"
                   component="div"
                   style={{
                     display: "flex",
@@ -73,7 +73,7 @@ function GetOnedata() {
                   }}
                 >
                   <Avatar
-                    alt="dkkd"
+                    alt={`photo de profil de ${username}`}
                     style={{
                       marginRight: "10px"
                     }}
@@ -113,7 +113,11 @@ function GetOnedata() {
                 <Typography gutterBottom variant="h5" component="div">
                   {post.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  style={{ marginBottom: "20px" }}
+                >
                   {post.content}
                 </Typography>{" "}
                 <LikePost id={id.id} />

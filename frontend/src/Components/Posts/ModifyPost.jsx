@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import axios from "axios";
+import { Redirect, useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -21,6 +22,8 @@ const style = {
 };
 
 export default function ModifyPost(id) {
+  let navigate = useNavigate();
+
   const token = JSON.parse(localStorage.getItem("tokens"));
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -57,7 +60,7 @@ export default function ModifyPost(id) {
       })
         .then(function (response) {
           setOpen(false);
-          window.location.reload();
+          navigate(`/home/post/${id.id}`);
         })
         .catch(function (response) {
           console.log(response);
@@ -75,7 +78,7 @@ export default function ModifyPost(id) {
     })
       .then(function (response) {
         setOpen(false);
-        window.location.reload();
+        navigate(`/home/post/${id.id}`);
       })
       .catch(function (response) {
         console.log(response);

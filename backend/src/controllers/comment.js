@@ -4,23 +4,22 @@ const User = sequelize.models.User;
 
 async function createComment(req, res) {
   const comment = req.body.content.trim();
+  if (comment === "") {
+    return res.status(400).json({ message: "Merci de remplir le champ!" });
+  }
+
   const createComment = await Comment.create({
     content: comment,
     UserId: req.auth,
     PostId: parseInt(req.params.id)
   });
-  if (comment === "") {
-    res.status(400).json({ message: "Merci de remplir le champ!" });
-  } else {
-    createComment
-      .save()
-      .then(() =>
-        res.status(201).json({ message: "Le commentaire a été ajouté" })
-      )
-      .catch((error) =>
-        res.status(500).json({ message: "Merci de remplir les champs", error })
-      );
-  }
+
+  createComment
+    .save()
+    .then(() =>
+      res.status(201).json({ message: "Le commentaire a été ajouté" })
+    )
+    .catch((error) => res.status(500).json({ error }));
 }
 
 async function getAllComment(req, res) {

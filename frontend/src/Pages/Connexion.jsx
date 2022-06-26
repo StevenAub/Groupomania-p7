@@ -7,6 +7,7 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import icon from "../Assets/icon.svg";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -21,6 +22,8 @@ const style = {
 };
 
 function Connexion() {
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -56,7 +59,7 @@ function Connexion() {
               isAdmin: responseData.data.isAdmin
             })
           );
-          window.location = "/home";
+          navigate("/home");
         }
       })
       .catch((error) => {

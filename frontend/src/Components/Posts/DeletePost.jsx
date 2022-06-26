@@ -1,8 +1,9 @@
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 
 export default function DeletePost(id) {
+  const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("tokens"));
   const user = JSON.parse(localStorage.getItem("UserId"));
 

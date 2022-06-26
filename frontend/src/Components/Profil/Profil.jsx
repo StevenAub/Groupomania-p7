@@ -16,7 +16,7 @@ import LikePost from "../Like/Likes";
 
 export default function GetUser() {
   const token = JSON.parse(localStorage.getItem("tokens"));
-
+  const userId = JSON.parse(localStorage.getItem("UserId"));
   const idRequest = useParams();
   const id = idRequest.id;
   const [user, setUser] = useState("");
@@ -56,11 +56,15 @@ export default function GetUser() {
           padding: "3%"
         }}
       >
-        <Stack direction="row" spacing={2} style={{ margin: "15px" }}>
+        <Stack
+          direction="row"
+          spacing={2}
+          style={{ margin: "15px", display: "flex", alignItems: "center" }}
+        >
           <Avatar
             alt={user.username}
             src={user.imgProfil}
-            sx={{ width: 100, height: 100 }}
+            sx={{ width: 80, height: 80 }}
           />
           <h1 style={{ borderBottom: "solid 1px black" }}>{user.username}</h1>
         </Stack>
@@ -80,8 +84,14 @@ export default function GetUser() {
               boxShadow: "5px 5px 5px #4E5166"
             }}
           >
-            {" "}
-            <SettingPost id={post.id} />
+            {post.UserId === userId.userId || userId.isAdmin === true ? (
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                {" "}
+                <SettingPost id={post.id} />
+              </div>
+            ) : (
+              <div></div>
+            )}
             <CardActionArea>
               {post.imgUrl ? (
                 <Link to={`/home/post/${post.id}`}>
