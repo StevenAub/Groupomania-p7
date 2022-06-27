@@ -108,6 +108,7 @@ async function modifyPost(req, res) {
         .catch((err) => res.status(404).json({ err }));
     });
   } else {
+    // Use 'const' to declare a constant
     postObject = {
       ...req.body.post
     };
@@ -149,6 +150,7 @@ async function deletePost(req, res) {
               .status(200)
               .json({ message: `Le post ${post.title} à bien été supprimé!` });
           })
+          // You declare 'error' but use the undefined variable 'err'
           .catch((error) => {
             res.status(500).json({
               message:

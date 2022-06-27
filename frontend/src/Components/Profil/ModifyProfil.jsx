@@ -63,7 +63,7 @@ export default function ModifyProfil() {
     });
   };
 
-  const DeleteProfil = async (e) => {
+  const DeleteProfil = async (e) => {  // remove unused "e"
     await axios
       .delete(`http://localhost:8080/api/user/${id.userId}`, {
         headers: { Authorization: `Bearer ${token}` }

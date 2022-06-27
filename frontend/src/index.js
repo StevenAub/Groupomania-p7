@@ -11,6 +11,9 @@ import Error from "./Components/Error/Error";
 import LoginPage from "./Pages/Connexion";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+// {" "} line 21 should be removed
+// And you can use nested routes to be cleaner
 root.render(
   <React.StrictMode>
     <Router>

@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");  // remove useless import
 
 module.exports = (sequelize, Datatypes) => {
   const User = sequelize.define(
@@ -30,7 +30,7 @@ module.exports = (sequelize, Datatypes) => {
         allowNull: true
       },
       isAdmin: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.BOOLEAN, // 'DataTypes' instead of 'Datatypes'
         defaultValue: false
       }
     },

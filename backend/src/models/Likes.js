@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize"); // Remove useless import 'Sequelize' & 'DataTypes'
 
 module.exports = (sequelize, Datatypes) => {
   const Likes = sequelize.define(
@@ -9,7 +9,7 @@ module.exports = (sequelize, Datatypes) => {
         primaryKey: true,
         autoIncrement: true
       },
-      like: DataTypes.INTEGER
+      like: DataTypes.INTEGER  // 'Datatypes' and not 'DataTypes'
     },
     {
       timestamps: true,

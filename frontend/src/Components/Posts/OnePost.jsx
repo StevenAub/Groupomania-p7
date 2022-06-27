@@ -16,7 +16,7 @@ function GetOnedata() {
   const id = useParams();
   const token = JSON.parse(localStorage.getItem("tokens"));
   const userId = JSON.parse(localStorage.getItem("UserId"));
-  const [post, setPost] = useState({});
+  const [post, setPost] = useState({});  // You should declare the object user with his properties instead of an empty object
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/post/${id.id}`, {
@@ -26,7 +26,7 @@ function GetOnedata() {
       .then((data) => setPost(data.GetPost));
   }, [id.id, token]);
 
-  const username = post.User?.username;
+  const username = post.User?.username; // you shoud rename the property "user" instead of "User"
   const imgProfil = post.User?.imgProfil;
 
   return (

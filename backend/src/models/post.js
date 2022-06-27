@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize"); // Remove useless import
 
 module.exports = (sequelize, Datatypes) => {
   const Post = sequelize.define(
@@ -19,7 +19,7 @@ module.exports = (sequelize, Datatypes) => {
       },
       imgUrl: { type: Datatypes.STRING, allowNull: true },
       likes: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER  // 'Datatypes' and not '"'Sequelize'"'
       }
     },
     {

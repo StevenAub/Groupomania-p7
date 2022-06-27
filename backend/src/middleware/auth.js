@@ -1,4 +1,10 @@
 const jwt = require("jsonwebtoken");
+// You declare your private key at two places.
+// You should declare it once in app.js or server.js and export it :
+// In 'app.js' or 'server.js' :
+// export const privateKey = "jdjdjddj"
+// And then in 'auth.js' :
+// import { privateKey } = "../app.js" or const privateKey = require("../app.js");
 const privateKey = "jdjdjddj";
 
 module.exports = (req, res, next) => {

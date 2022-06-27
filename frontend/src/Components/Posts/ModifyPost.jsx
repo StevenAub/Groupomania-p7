@@ -90,8 +90,8 @@ export default function ModifyPost(id) {
       <div>
         <Button onClick={handleOpen}>Modifier</Button>
         <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
+          aria-labelledby="transition-modal-title"  // remove or rename aria
+          aria-describedby="transition-modal-description" // remove or rename aria
           open={open}
           onClose={handleClose}
           closeAfterTransition

@@ -7,7 +7,7 @@ const Comment = sequelize.models.Comment;
 const Likes = sequelize.models.Likes;
 const privateKey = "jdjdjddj";
 const fs = require("fs");
-var validator = require("email-validator");
+var validator = require("email-validator"); // use 'const' instead of 'var' or 'import validator from "email-validator";'
 const sharp = require("sharp");
 
 function Signup(req, res) {
@@ -87,6 +87,8 @@ function Login(req, res) {
 }
 
 async function getAllUsers(req, res) {
+  // You don't need to declare users here
+  // just do await User.findAll.....
   const users = await User.findAll({ order: [["id", "DESC"]] })
     .then((users) => res.status(200).json({ users }))
     .catch((err) =>
@@ -124,7 +126,7 @@ async function modifyUser(req, res) {
   const id = req.params.id;
 
   const user = await User.findOne({ where: { id: id } });
-  const username = req.body.username;
+  const username = req.body.username;  // remove useless const
   const password = req.body.password;
 
   const userTest = { ...req.body };
@@ -150,6 +152,7 @@ async function modifyImageUser(req, res) {
 
   fs.unlink(`images/${filename}`, async () => {
     if (req.file) {
+      // don't forget to use "const" or "let" to declare a variable
       img = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
 
       const nameImg = img.split("/images/")[1];
@@ -158,6 +161,10 @@ async function modifyImageUser(req, res) {
         await sharp(`./images/${nameImg}`)
           .resize(500)
           .toFile(`./images/mini_${nameImg}`);
+
+        // the callback in the second parameters of the function 'unlink' is not used (you declare a variable which is not used then)
+        // In this case, you should use 'unlinkSync' which take only one parameter : the path of the file (https://nodejs.org/api/fs.html#fsunlinksyncpath)
+        // Be careful to don't forget to use await with 'unlinkSync'
         fs.unlink(`images/${nameImg}`, () => {
           imgUrl = `${req.protocol}://${req.get("host")}/images/${
             req.file.filename
@@ -184,6 +191,10 @@ async function deleteUser(req, res) {
   });
   if (user.id === req.auth);
 
+
+  // 'postsUser' is only used once and juste after his declaration.
+  // In this case, it's better to write it in one line
+  // const allImg = JSON.parse(JSON.stringify(user.Posts)):
   const postsUser = JSON.stringify(user.Posts);
   const allImg = JSON.parse(postsUser);
   allImg.map((imgurl) => {
@@ -210,6 +221,8 @@ async function deleteUser(req, res) {
             message: `L'utilisateur' ${user.username} à bien été supprimé!`
           });
         })
+
+        // You declare 'error' but use the undefined variable 'err'
         .catch((error) => {
           res.status(500).json({
             message:
