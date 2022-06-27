@@ -6,7 +6,6 @@ const path = require("path");
 const userRoutes = require("./src/routes/user");
 const stuffRoutes = require("./src/routes/post");
 const likeRoutes = require("./src/routes/like");
-const mysql = require("mysql");
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

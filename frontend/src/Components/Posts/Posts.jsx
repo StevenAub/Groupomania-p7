@@ -41,11 +41,6 @@ function Post() {
   const [file, setFile] = useState();
   const [nameImage, setNameImage] = useState("");
   let newPost = true;
-
-  const testd = "http://localhost:8080/images/IMG_0666.JPG1656252763020.jpg";
-
-  console.log(testd.split("/images/")[1]);
-
   const onChange = ({ target: { name, value } }) => {
     setPost((post) => ({ ...post, [name]: value }));
   };
