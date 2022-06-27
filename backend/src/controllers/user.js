@@ -214,7 +214,7 @@ async function deleteUser(req, res) {
           res.status(500).json({
             message:
               "L'utilisateur n'a pas pu etre supprimé, Réessayez dans quelques instants!",
-            erreur: err
+            erreur: error
           });
         });
     });

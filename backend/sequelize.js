@@ -38,7 +38,6 @@ sequelize.sync().then(() => {
 });
 
 function loadFixtures() {
-  // can use glob syntax to select multiple files
   sequelize_fixtures
     .loadFixtures(adminModel, sequelize.models)
     .then(function () {
