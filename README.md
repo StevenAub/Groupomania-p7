@@ -10,9 +10,7 @@
 
 ## Installation
 
----
-
-## **Pour commencer, assurez vous que NodeJS est installé sur votre ordinateur**
+### Pour commencer, assurez vous que NodeJS est installé sur votre ordinateur
 
 ## **Démarrer le serveur MySQL sur le port 3306**
 
@@ -29,9 +27,9 @@
 - Dans le terminal, a la racine du dossier frontend, tapez la commande
   `npm install`
 
-## Utilisatation
-
 ---
+
+## Utilisatation
 
 #### Backend
 
