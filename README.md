@@ -4,15 +4,17 @@
 
 ---
 
-### ReactJS NodeJS MySQL Sequelize
+## ReactJS NodeJS MySQL Sequelize
+
+---
 
 ## Installation
 
 ---
 
-## \*\*Pour commencer, assurez vous que NodeJS est installé sur votre ordinateur
+## **Pour commencer, assurez vous que NodeJS est installé sur votre ordinateur**
 
-## \*\*Démarrer le serveur MySQL sur le port 3306
+## **Démarrer le serveur MySQL sur le port 3306**
 
 ### Créez une Base de données nommé groupomania sur phpMyAdmin
 
