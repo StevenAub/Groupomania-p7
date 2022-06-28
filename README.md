@@ -4,43 +4,43 @@
 
 ---
 
-## **Ce Texte est en gras**
+### ReactJS NodeJS MySQL Sequelize
 
-_Mettre en Italique_
-
-Pour faire un retour a la ligne,  
-Il faut mettre 2 espaces!
+## Installation
 
 ---
 
-Faire une liste a puce :
+## \*\*Pour commencer, assurez vous que NodeJS est installé sur votre ordinateur
 
-- element1
-- element2
-- element3
+## \*\*Démarrer le serveur MySQL sur le port 3306
 
-Faire une liste ordonée:
+### Créez une Base de données nommé groupomania sur phpMyAdmin
 
-1. element1
-2. element2
-3. element3
+#### Backend
 
-Imbrication de puce
+- Dans le terminal, a la racine du dossier backend, tapez la commande
+  `npm install`
+- Saisissez vos information de connexion sur le fichier sequelize.js
 
-- element1
-  - sous-element
-  - sous elements!
+#### Frontend
 
-Faire une citation:
+- Dans le terminal, a la racine du dossier frontend, tapez la commande
+  `npm install`
 
-> Ceci est une citation  
-> Je suis revenu a la ligne!
+## Utilisatation
 
-Affciher un bouyt de code
-`Le bout de code!`
+---
 
-Mettre un lien dans le readme
-Mon blog [google](http://google.com)
+#### Backend
 
-Mettre une image, logo
-![logo google](http://google.com)
+- Dans le terminal, a la racine du dossier backend, tapez la commande
+  `npm start`
+
+##### Un message devrais indiquer que la connexion est réussite
+
+#### Frontend
+
+- Dans le terminal, a la racine du dossier frontend, tapez la commande
+  `npm start`
+
+#### Cela devais ouvrir l'application sur le port 8080
