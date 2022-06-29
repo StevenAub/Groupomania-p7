@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import {useCallback, useEffect, useState} from "react";
 import Card from "@mui/material/Card";
 import { Link } from "react-router-dom";
 import CardContent from "@mui/material/CardContent";
@@ -37,7 +37,7 @@ function Post() {
   const [displayError, setDisplayError] = useState(false);
   const userId = JSON.parse(localStorage.getItem("UserId"));
   const [post, setPost] = useState({ title: "", content: "" });
-  const [file, setFile] = useState();
+  const [file, setFile] = useState("");
   const token = JSON.parse(localStorage.getItem("tokens"));
   const [nameImage, setNameImage] = useState("");
   let newPost = true;
@@ -49,15 +49,15 @@ function Post() {
     setNameImage(file.name);
     setFile(e.target.files[0]);
   };
+
   const handleSubmit = (e) => {
     if (
-      (post.content.trim() === "" || post.title.trim() === "") &&
-      (file === "" || post.title.trim() === "")
+      post.title.trim() === "" ||
+      (file === "" && post.content.trim() === "")
     ) {
       setError(
-        "Merci de remplir au moins le titre et la description ou le titre et une image! "
+        "Merci de remplir au moins le titre et la description ou une image! "
       );
-      console.log(file);
       setDisplayError(true);
       return <div></div>;
     }
@@ -131,6 +131,15 @@ function Post() {
     }
   }
 
+  const onDeletePost = useCallback((postId) =>  {
+    const index = list.findIndex(post => post.id === postId);
+    setList(list => {
+      const tmp = [...list];
+      tmp.splice(index, 1);
+      return tmp;
+    });
+  }, [list]);
+
   useEffect(() => {
     let newPost = true;
     if (list.length && !alert) {
@@ -142,7 +151,7 @@ function Post() {
       }
     });
     return () => (newPost = false);
-  }, [alert, list.length]);
+  }, [alert]);
 
   useEffect(() => {
     if (alert) {
@@ -153,6 +162,7 @@ function Post() {
       }, 100);
     }
   }, [alert, newPost]);
+
   return (
     <div
       style={{
@@ -247,7 +257,7 @@ function Post() {
               {post.UserId === userId.userId || userId.isAdmin === true ? (
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   {" "}
-                  <SettingPost id={post.id} />
+                  <SettingPost id={post.id} onDeletePost={onDeletePost} />
                 </div>
               ) : (
                 <div></div>

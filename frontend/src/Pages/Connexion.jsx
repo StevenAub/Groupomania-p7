@@ -48,7 +48,6 @@ function Connexion() {
     })
       .then((res) => res.json())
       .then((responseData) => {
-        console.log(responseData);
         if (!responseData) {
           const MsgData = responseData.message;
           setErrorMsg(MsgData);
@@ -58,8 +57,8 @@ function Connexion() {
           localStorage.setItem(
             "UserId",
             JSON.stringify({
-              userId: responseData.userId,
-              isAdmin: responseData.isAdmin
+              userId: responseData.data.id,
+              isAdmin: responseData.data.isAdmin
             })
           );
           navigate("/home");
@@ -69,7 +68,6 @@ function Connexion() {
         error.textContent = errorMsg;
       });
   };
-  console.log(error);
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>

@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
     });
   }
   const token = authorizationHeader.split(" ")[1];
-  jwt.verify(token, privateKey, (err, decodedToken) => {
+  jwt.verify(token, "random", (err, decodedToken) => {
     if (err) {
       return res.status(401).json({
         message: "L'utilisateur n'est pas autorisé a acceder a cette ressource!"

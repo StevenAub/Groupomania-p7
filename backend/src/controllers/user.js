@@ -68,7 +68,7 @@ async function Login(req, res) {
 
           const token = jwt.sign(
             { userId: user.id, username: user.username, admin: user.isAdmin },
-            privateKey,
+            "random",
             {
               expiresIn: "24h"
             }

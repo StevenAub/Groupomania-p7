@@ -7,9 +7,7 @@ const fs = require("fs");
 const sharp = require("sharp");
 
 async function createPost(req, res) {
-  console.log({ ...req.auth });
   const USERID = { ...req.auth };
-  console.log(USERID.userId);
   const title = req.body.title.trim();
   if (title === "") {
     return res
