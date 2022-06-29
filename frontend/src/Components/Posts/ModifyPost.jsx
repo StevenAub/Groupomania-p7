@@ -1,13 +1,18 @@
 import * as React from "react";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import {
+  IconButton,
+  Stack,
+  TextField,
+  Button,
+  Fade,
+  Modal,
+  Backdrop,
+  styled
+} from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import { Redirect, useNavigate } from "react-router-dom";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 
 const style = {
   position: "absolute",
@@ -20,6 +25,10 @@ const style = {
   boxShadow: 24,
   p: 4
 };
+
+const Input = styled("input")({
+  display: "none"
+});
 
 export default function ModifyPost(id) {
   let navigate = useNavigate();
@@ -78,7 +87,7 @@ export default function ModifyPost(id) {
     })
       .then(function (response) {
         setOpen(false);
-        navigate(`/home/post/${id.id}`);
+        window.location.reload();
       })
       .catch(function (response) {
         console.log(response);
@@ -101,32 +110,43 @@ export default function ModifyPost(id) {
           }}
         >
           <Fade in={open}>
-            <Box sx={style}>
+            <Stack sx={style}>
               <TextField
                 id="standard-basic"
                 label="Titre"
-                variant="standard"
+                variant="outlined"
                 name="title"
+                value={post.title}
                 onChange={onChange}
               />
               <TextField
                 id="standard-basic"
                 label="Description"
                 name="content"
-                variant="standard"
+                variant="outlined"
+                value={post.content}
                 onChange={onChange}
               />{" "}
-              <input
-                type="file"
-                id="imgUrl"
-                name="imgUrl"
-                accept="image/png, image/jpeg, image/jpg"
-                onChange={onChangeImage}
-              />
+              <label htmlFor="icon-button-file">
+                <Input
+                  accept="image/*"
+                  id="icon-button-file"
+                  type="file"
+                  name="imgUrl"
+                  onChange={onChangeImage}
+                />
+                <IconButton
+                  color="primary"
+                  aria-label="upload picture"
+                  component="span"
+                >
+                  <PhotoCamera />
+                </IconButton>
+              </label>
               <Button variant="contained" onClick={handleSubmit}>
                 Modifier
               </Button>
-            </Box>
+            </Stack>
           </Fade>
         </Modal>
       </div>

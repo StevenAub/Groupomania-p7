@@ -48,18 +48,17 @@ function Connexion() {
     })
       .then((res) => res.json())
       .then((responseData) => {
-        console.log(responseData);
-        if (!responseData) {
-          const MsgData = responseData.message;
-          setErrorMsg(MsgData);
-        } else {
+        console.log(responseData.status);
+        if (responseData.status !== "200") {
+          setErrorMsg(responseData.message);
+        } else if (responseData.status === "200") {
           const token = responseData.token;
           localStorage.setItem("tokens", JSON.stringify(token));
           localStorage.setItem(
             "UserId",
             JSON.stringify({
-              userId: responseData.userId,
-              isAdmin: responseData.isAdmin
+              userId: responseData.data.id,
+              isAdmin: responseData.data.isAdmin
             })
           );
           navigate("/home");
@@ -69,7 +68,6 @@ function Connexion() {
         error.textContent = errorMsg;
       });
   };
-  console.log(error);
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -115,7 +113,7 @@ function Connexion() {
               type="password"
               value={form.password}
             />{" "}
-            <p className="error"></p>{" "}
+            <p>{errorMsg}</p>{" "}
           </Box>
           <Button variant="contained" onClick={userData}>
             Se connecter
@@ -149,7 +147,6 @@ function Inscription() {
     })
       .then((res) => res.json())
       .then((responseData) => {
-        setError(responseData.message || responseData.error);
         if (responseData.status === 201) {
           setMessage(responseData.message);
           setOpen(false);

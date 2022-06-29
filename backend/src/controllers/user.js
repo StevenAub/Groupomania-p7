@@ -68,7 +68,7 @@ async function Login(req, res) {
 
           const token = jwt.sign(
             { userId: user.id, username: user.username, admin: user.isAdmin },
-            privateKey,
+            "random",
             {
               expiresIn: "24h"
             }
@@ -76,7 +76,7 @@ async function Login(req, res) {
           req.auth = user.id;
           req.username = user.username;
           const message = `L'utilisateur a été connecté avec succès`;
-          res.status(200).json({ message, data: user, token });
+          res.status(200).json({ message, data: user, token, status: "200" });
         });
     })
     .catch((error) => {
