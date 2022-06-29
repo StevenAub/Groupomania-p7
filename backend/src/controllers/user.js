@@ -5,9 +5,8 @@ const User = sequelize.models.User;
 const Post = sequelize.models.Post;
 const Comment = sequelize.models.Comment;
 const Likes = sequelize.models.Likes;
-const privateKey = "jdjdjddj";
 const fs = require("fs");
-var validator = require("email-validator");
+const validator = require("email-validator");
 const sharp = require("sharp");
 
 function Signup(req, res) {
@@ -52,7 +51,7 @@ function Signup(req, res) {
   }
 }
 
-function Login(req, res) {
+async function Login(req, res) {
   User.findOne({ where: { email: req.body.email } })
     .then((user) => {
       if (!user) {
@@ -87,7 +86,7 @@ function Login(req, res) {
 }
 
 async function getAllUsers(req, res) {
-  const users = await User.findAll({ order: [["id", "DESC"]] })
+  await User.findAll({ order: [["id", "DESC"]] })
     .then((users) => res.status(200).json({ users }))
     .catch((err) =>
       res.status(404).json({
@@ -122,13 +121,9 @@ async function getPostUserId(req, res) {
 
 async function modifyUser(req, res) {
   const id = req.params.id;
-
   const user = await User.findOne({ where: { id: id } });
-  const username = req.body.username;
   const password = req.body.password;
-
-  const userTest = { ...req.body };
-
+  const userInfo = { ...req.body };
   if (password) {
     bcrypt.hash(req.body.password, 10).then((hash) => {
       user.update({ password: hash });
@@ -136,8 +131,8 @@ async function modifyUser(req, res) {
   }
   user
     .update({
-      username: userTest.username || undefined,
-      email: userTest.email || undefined
+      username: userInfo.username || undefined,
+      email: userInfo.email || undefined
     })
     .then(() => res.status(200).json({ message: "User modifié", user }))
     .catch((error) => res.status(404).json({ error }));
@@ -150,7 +145,9 @@ async function modifyImageUser(req, res) {
 
   fs.unlink(`images/${filename}`, async () => {
     if (req.file) {
-      img = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+      const img = `${req.protocol}://${req.get("host")}/images/${
+        req.file.filename
+      }`;
 
       const nameImg = img.split("/images/")[1];
 
@@ -158,8 +155,8 @@ async function modifyImageUser(req, res) {
         await sharp(`./images/${nameImg}`)
           .resize(500)
           .toFile(`./images/mini_${nameImg}`);
-        fs.unlink(`images/${nameImg}`, () => {
-          imgUrl = `${req.protocol}://${req.get("host")}/images/${
+        fs.unlinkSync(`images/${nameImg}`, () => {
+          imgUrl = `${req.proStocol}://${req.get("host")}/images/${
             req.file.filename
           }`;
         });

@@ -7,6 +7,9 @@ const fs = require("fs");
 const sharp = require("sharp");
 
 async function createPost(req, res) {
+  console.log({ ...req.auth });
+  const USERID = { ...req.auth };
+  console.log(USERID.userId);
   const title = req.body.title.trim();
   if (title === "") {
     return res
@@ -108,7 +111,7 @@ async function modifyPost(req, res) {
         .catch((err) => res.status(404).json({ err }));
     });
   } else {
-    postObject = {
+    const postObject = {
       ...req.body.post
     };
     post
@@ -153,7 +156,7 @@ async function deletePost(req, res) {
             res.status(500).json({
               message:
                 "Le post n'a pas pu etre supprimé, Réessayez dans quelques instants!",
-              erreur: err
+              erreur: error
             });
           });
       });

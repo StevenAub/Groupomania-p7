@@ -1,9 +1,8 @@
 const sequelize = require("../../sequelize");
 const Post = sequelize.models.Post;
-const User = sequelize.models.User;
 const Like = sequelize.models.Likes;
 
-async function findAllLikes(req, res, next) {
+async function findAllLikes(req, res) {
   const post = await Post.findOne({ where: { id: req.params.id } });
   console.log(post);
   await Like.findAll({
@@ -17,7 +16,7 @@ async function findAllLikes(req, res, next) {
     .catch((error) => res.status(400).json({ error }));
 }
 
-async function likePost(req, res, next) {
+async function likePost(req, res) {
   const post = await Post.findOne({
     where: { id: req.params.id }
   });

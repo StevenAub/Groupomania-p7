@@ -29,6 +29,7 @@ export default function GetUser() {
         headers: { authorization: `Bearer ${token}` }
       })
       .then((res) => {
+        console.log(res);
         setUser(res.data.GetUser);
       })
       .catch((err) => console.log(err));

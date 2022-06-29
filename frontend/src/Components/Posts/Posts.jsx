@@ -13,8 +13,6 @@ import TextField from "@mui/material/TextField";
 import LikePost from "../Like/Likes";
 import SettingPost from "./SettingPost";
 
-const token = JSON.parse(localStorage.getItem("tokens"));
-
 const DivInput = styled.div`
   display: flex;
   flex-direction: column;
@@ -23,6 +21,7 @@ const DivInput = styled.div`
 `;
 
 async function getList() {
+  const token = JSON.parse(localStorage.getItem("tokens"));
   return await fetch("http://localhost:8080/api/post", {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` }
@@ -39,6 +38,7 @@ function Post() {
   const userId = JSON.parse(localStorage.getItem("UserId"));
   const [post, setPost] = useState({ title: "", content: "" });
   const [file, setFile] = useState();
+  const token = JSON.parse(localStorage.getItem("tokens"));
   const [nameImage, setNameImage] = useState("");
   let newPost = true;
   const onChange = ({ target: { name, value } }) => {
@@ -50,13 +50,23 @@ function Post() {
     setFile(e.target.files[0]);
   };
   const handleSubmit = (e) => {
+    if (
+      (post.content.trim() === "" || post.title.trim() === "") &&
+      (file === "" || post.title.trim() === "")
+    ) {
+      setError(
+        "Merci de remplir au moins le titre et la description ou le titre et une image! "
+      );
+      console.log(file);
+      setDisplayError(true);
+      return <div></div>;
+    }
     e.preventDefault();
 
     if (file) {
       const Formdata = new FormData();
       Formdata.append("title", post.title);
       Formdata.append("content", post.content);
-
       Formdata.append("image", file);
 
       axios({
@@ -83,8 +93,6 @@ function Post() {
         .catch((err) => {
           setError(err.response.data.message);
           setDisplayError(true);
-          setFile("");
-          setPost({ title: "", content: "" });
         });
     } else {
       axios({
@@ -96,7 +104,7 @@ function Post() {
           authorization: `Bearer ${token}`
         }
       })
-        .then((res) => {
+        .then(() => {
           if (newPost) {
             setAlert(true);
             document.forms["post"].reset();
@@ -109,8 +117,6 @@ function Post() {
         .catch((err) => {
           setError(err.response.data.message);
           setDisplayError(true);
-          setFile("");
-          setPost({ title: "", content: "" });
         });
     }
   };

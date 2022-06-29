@@ -3,8 +3,8 @@ module.exports = [
     model: "User",
     data: {
       email: "admin@groupomania.fr",
-      username: "Administrateur",
-      password: "$2b$10$b/trtJH3oQsgQJtQZ/f2YudzZVL0.VaB9nQPx.Y9gE/m8.6St0Kpm",
+      username: "Admin",
+      password: "$2b$10$9mof2GSgGNtceLGMTJ.1hOhXOP3z083lqRHDAwOF4.BFBCziGjBo.",
       isAdmin: true
     }
   }

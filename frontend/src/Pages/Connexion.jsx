@@ -23,49 +23,54 @@ const style = {
 
 function Connexion() {
   const navigate = useNavigate();
+  const token = JSON.parse(localStorage.getItem("tokens"));
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const formError = document.querySelector(".formError");
-
   const [form, setForm] = useState({ email: "", password: "" });
-
+  const [errorMsg, setErrorMsg] = useState("");
   const onChange = ({ target: { name, value } }) => {
     setForm((form) => ({ ...form, [name]: value }));
   };
+  const error = document.getElementsByClassName("error");
 
   const userData = async () => {
     await fetch("http://localhost:8080/api/auth/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+
         "Content-Type": "application/json"
       },
       body: JSON.stringify(form)
     })
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((responseData) => {
-        if (!responseData.data) {
+        console.log(responseData);
+        if (!responseData) {
           const MsgData = responseData.message;
-          formError.textContent = MsgData;
+          setErrorMsg(MsgData);
         } else {
           const token = responseData.token;
           localStorage.setItem("tokens", JSON.stringify(token));
           localStorage.setItem(
             "UserId",
             JSON.stringify({
-              userId: responseData.data.id,
-              isAdmin: responseData.data.isAdmin
+              userId: responseData.userId,
+              isAdmin: responseData.isAdmin
             })
           );
           navigate("/home");
         }
       })
       .catch((error) => {
-        console.log(error);
+        error.textContent = errorMsg;
       });
   };
+  console.log(error);
+
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Button
@@ -109,13 +114,9 @@ function Connexion() {
               name="password"
               type="password"
               value={form.password}
-            />
+            />{" "}
+            <p className="error"></p>{" "}
           </Box>
-          <p
-            className="formError"
-            style={{ color: "red", fontSize: ".9em" }}
-          ></p>
-
           <Button variant="contained" onClick={userData}>
             Se connecter
           </Button>

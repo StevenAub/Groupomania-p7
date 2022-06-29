@@ -1,32 +1,32 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 
-module.exports = (sequelize, Datatypes) => {
+module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
       id: {
-        type: Datatypes.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
 
       email: {
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: true,
         unique: {
           msg: "L'adresse email est deja utilisée!"
         }
       },
       username: {
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: true
       },
       password: {
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: true
       },
       imgProfil: {
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: true
       },
       isAdmin: {

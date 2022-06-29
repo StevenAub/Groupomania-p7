@@ -11,30 +11,40 @@ import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 
 export default function DisplayAllComment() {
+  const token = JSON.parse(localStorage.getItem("tokens"));
+  const userId = JSON.parse(localStorage.getItem("UserId"));
+  const idRequest = useParams();
+  const id = idRequest.id;
   const [list, setList] = useState([]);
   const [alert, setAlert] = useState(false);
   const [error, setError] = useState([]);
+  const [displayError, setDisplayError] = useState(false);
   let newComment = true;
 
-  const idRequest = useParams();
-  const id = idRequest.id;
-  const token = JSON.parse(localStorage.getItem("tokens"));
-  const userId = JSON.parse(localStorage.getItem("UserId"));
-  //const [comment, setComment] = useState(false);
-  //Ajout d'un commentaire
-
   function AddComment() {
-    const idRequest = useParams();
-    const id = idRequest.id;
-    const token = JSON.parse(localStorage.getItem("tokens"));
     const [comment, setComment] = useState("");
-    const [displayError, setDisplayError] = useState(false);
 
     const onChange = (e) => {
       let value = e.target.value;
       setComment(value);
     };
+
+    function DisplayError() {
+      if (displayError === true) {
+        return (
+          <div>
+            <p>{error}</p>
+          </div>
+        );
+      }
+    }
+
     const handleSubmit = async (e) => {
+      if (comment.trim() === "") {
+        setError("Merci de remplir le champ!");
+        setDisplayError(true);
+        return <div></div>;
+      }
       e.preventDefault();
 
       await axios({
@@ -50,25 +60,17 @@ export default function DisplayAllComment() {
           if (newComment) {
             setAlert(true);
             document.forms["comment"].reset();
-            setComment("");
             setDisplayError(false);
+            setComment("");
           }
         })
         .catch((response) => {
-          setError(response.response.data.message);
-          setDisplayError(true);
+          if (response) {
+            setError(response.response.data.message);
+            setDisplayError(true);
+          }
         });
     };
-
-    function DisplayError() {
-      if (displayError === true) {
-        return (
-          <div>
-            <p>{error}</p>
-          </div>
-        );
-      }
-    }
 
     return (
       <div>
@@ -98,7 +100,7 @@ export default function DisplayAllComment() {
                 fullWidth
                 onChange={onChange}
               ></TextField>
-              <DisplayError />{" "}
+              <DisplayError />
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <Button
                   style={{ margin: "5px", width: "100%" }}

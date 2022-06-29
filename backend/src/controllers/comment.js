@@ -7,13 +7,11 @@ async function createComment(req, res) {
   if (comment === "") {
     return res.status(400).json({ message: "Merci de remplir le champ!" });
   }
-
   const createComment = await Comment.create({
     content: comment,
     UserId: req.auth,
     PostId: parseInt(req.params.id)
   });
-
   createComment
     .save()
     .then(() =>
@@ -40,8 +38,6 @@ async function getAllComment(req, res) {
   }
 }
 
-function modifyComment(req, res) {}
-
 async function deleteComment(req, res) {
   Comment.destroy({ where: { id: req.params.id } })
     .then(() =>
@@ -53,7 +49,5 @@ async function deleteComment(req, res) {
 module.exports = {
   getAllComment,
   createComment,
-
-  deleteComment,
-  modifyComment
+  deleteComment
 };

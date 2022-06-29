@@ -7,7 +7,6 @@ import App from "./App";
 import OnePost from "./Components/Posts/OnePost";
 import GetUser from "./Components/Profil/Profil";
 import UpdateUser from "./Components/Profil/ModifyProfil";
-import Error from "./Components/Error/Error";
 import LoginPage from "./Pages/Connexion";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -15,12 +14,19 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="*" element={<Error />} />
-        <Route exact path="/" element={<LoginPage />} />{" "}
-        <Route path="/home" element={<App />} />
-        <Route path="home/post/:id" element={<OnePost />} />
-        <Route path="/home/user/:id" element={<GetUser />} />
-        <Route path="/home/user/:id/update" element={<UpdateUser />} />
+        <Route exact path="/" element={<LoginPage />} />
+      </Routes>
+      <Routes>
+        <Route exact path="/home" element={<App />} />
+      </Routes>
+      <Routes>
+        <Route exact path="home/post/:id" element={<OnePost />} />
+      </Routes>
+      <Routes>
+        <Route exact path="/home/user/:id" element={<GetUser />} />
+      </Routes>
+      <Routes>
+        <Route exact path="/home/user/:id/update" element={<UpdateUser />} />
       </Routes>
     </Router>{" "}
   </React.StrictMode>
