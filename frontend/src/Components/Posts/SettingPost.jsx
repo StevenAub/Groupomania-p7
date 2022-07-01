@@ -5,8 +5,9 @@ import MenuItem from "@mui/material/MenuItem";
 import ModifyPost from "./ModifyPost";
 import DeletePost from "./DeletePost";
 
-export default function SettingPost({id , onDeletePost}) {
-  const PostId = id;
+export default function SettingPost({ id }) {
+  const postId = id.postId;
+  const userId = id.userId;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -54,10 +55,10 @@ export default function SettingPost({id , onDeletePost}) {
         }}
       >
         <MenuItem>
-          <ModifyPost id={PostId} />
+          <ModifyPost id={{ postId: postId, userId: userId }} />
         </MenuItem>
         <MenuItem onClick={handleClose}>
-          <DeletePost id={PostId} onDeletePost={onDeletePost} />
+          <DeletePost id={postId} />
         </MenuItem>
       </Menu>
     </div>

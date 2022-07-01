@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useCallback, useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import { Link } from "react-router-dom";
 import CardContent from "@mui/material/CardContent";
@@ -131,15 +131,6 @@ function Post() {
     }
   }
 
-  const onDeletePost = useCallback((postId) =>  {
-    const index = list.findIndex(post => post.id === postId);
-    setList(list => {
-      const tmp = [...list];
-      tmp.splice(index, 1);
-      return tmp;
-    });
-  }, [list]);
-
   useEffect(() => {
     let newPost = true;
     if (list.length && !alert) {
@@ -151,7 +142,7 @@ function Post() {
       }
     });
     return () => (newPost = false);
-  }, [alert]);
+  }, [alert, list.length]);
 
   useEffect(() => {
     if (alert) {
@@ -257,7 +248,7 @@ function Post() {
               {post.UserId === userId.userId || userId.isAdmin === true ? (
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   {" "}
-                  <SettingPost id={post.id} onDeletePost={onDeletePost} />
+                  <SettingPost id={{ postId: post.id, userId: post.UserId }} />
                 </div>
               ) : (
                 <div></div>
@@ -279,7 +270,7 @@ function Post() {
                       }}
                     >
                       <Avatar
-                        alt={post.User.username}
+                        alt={`photo de profil de ${post.User.username}`}
                         style={{
                           marginRight: "10px"
                         }}
@@ -296,7 +287,7 @@ function Post() {
                     <CardMedia
                       component="img"
                       image={post.imgUrl}
-                      alt="green iguana"
+                      alt={`photo du post ${post.title}`}
                       style={{
                         objectFit: "contain",
                         margin: "auto",

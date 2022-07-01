@@ -33,7 +33,6 @@ function Connexion() {
   const onChange = ({ target: { name, value } }) => {
     setForm((form) => ({ ...form, [name]: value }));
   };
-  const error = document.getElementsByClassName("error");
 
   const userData = async () => {
     await fetch("http://localhost:8080/api/auth/login", {
@@ -48,7 +47,6 @@ function Connexion() {
     })
       .then((res) => res.json())
       .then((responseData) => {
-        console.log(responseData.status);
         if (responseData.status !== "200") {
           setErrorMsg(responseData.message);
         } else if (responseData.status === "200") {
@@ -112,8 +110,8 @@ function Connexion() {
               name="password"
               type="password"
               value={form.password}
-            />{" "}
-            <p>{errorMsg}</p>{" "}
+            />
+            <p>{errorMsg}</p>
           </Box>
           <Button variant="contained" onClick={userData}>
             Se connecter

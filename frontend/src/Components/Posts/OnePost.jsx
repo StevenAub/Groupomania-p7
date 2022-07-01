@@ -55,7 +55,7 @@ function GetOnedata() {
             {post.UserId === userId.userId || userId.isAdmin === true ? (
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 {" "}
-                <SettingPost id={post.id} />
+                <SettingPost id={{ postId: post.id, userId: post.UserId }} />
               </div>
             ) : (
               <div></div>
@@ -98,7 +98,7 @@ function GetOnedata() {
                 <CardMedia
                   component="img"
                   image={post.imgUrl}
-                  alt="green iguana"
+                  alt={`photo du post ${post.title}`}
                   style={{
                     objectFit: "contain",
                     width: "99%",

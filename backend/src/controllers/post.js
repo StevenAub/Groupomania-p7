@@ -7,7 +7,6 @@ const fs = require("fs");
 const sharp = require("sharp");
 
 async function createPost(req, res) {
-  const USERID = { ...req.auth };
   const title = req.body.title.trim();
   if (title === "") {
     return res
@@ -41,7 +40,7 @@ async function createPost(req, res) {
         title: title,
         content: req.body.content,
         imgUrl: imgUrl,
-        UserId: req.auth,
+        UserId: req.auth.userId,
         PostId: parseInt(req.params.id)
       });
 
@@ -93,47 +92,49 @@ async function getAllPost(req, res) {
 
 async function modifyPost(req, res) {
   const post = await Post.findOne({ where: { id: req.params.id } });
-
-  const filename = post.imgUrl.split("/images/")[1];
-  let imgUrl = "";
-  if (req.file) {
-    fs.unlink(`images/${filename}`, () => {
-      imgUrl = `${req.protocol}://${req.get("host")}/images/${
-        req.file.filename
-      }`;
+  if (post.UserId === req.auth.userId) {
+    const filename = post.imgUrl.split("/images/")[1];
+    let imgUrl = "";
+    if (req.file) {
+      fs.unlink(`images/${filename}`, () => {
+        imgUrl = `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`;
+        post
+          .update({ imgUrl: imgUrl || undefined })
+          .then(() =>
+            res.status(200).json({ message: "Le post a été modifiée!" })
+          )
+          .catch((err) => res.status(404).json({ err }));
+      });
+    } else {
+      const postObject = {
+        ...req.body.post
+      };
       post
-        .update({ imgUrl: imgUrl || undefined })
+        .update({
+          title: req.body.title || undefined,
+          content: req.body.content || undefined
+        })
         .then(() =>
-          res.status(200).json({ message: "Le post a été modifiée!" })
+          res
+            .status(200)
+            .json({ message: "Le post a été modifiée!", postObject })
         )
         .catch((err) => res.status(404).json({ err }));
-    });
+    }
   } else {
-    const postObject = {
-      ...req.body.post
-    };
-    post
-      .update({
-        title: req.body.title || undefined,
-        content: req.body.content || undefined
-      })
-      .then(() =>
-        res.status(200).json({ message: "Le post a été modifiée!", postObject })
-      )
-      .catch((err) => res.status(404).json({ err }));
+    res
+      .status(401)
+      .json({ message: "Vous n'etes pas autorisé a modifié ce post!" });
   }
 }
 
 async function deletePost(req, res) {
-  const user = await User.findOne({
-    where: { id: req.auth }
-  });
-  const admin = user.isAdmin;
   const post = await Post.findOne({
     where: { id: req.params.id }
   });
-  console.log(post);
-  if (post.UserId === req.auth || admin === true)
+  if (post.UserId === req.auth.userId || req.auth.isAdmin === true) {
     Post.findByPk(req.params.id).then((post) => {
       if (post === null) {
         return res
@@ -159,6 +160,11 @@ async function deletePost(req, res) {
           });
       });
     });
+  } else {
+    res
+      .status(401)
+      .json({ message: "Vous n'etes pas autorisé a supprimer ce post" });
+  }
 }
 
 module.exports = {

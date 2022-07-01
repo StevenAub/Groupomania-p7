@@ -73,8 +73,6 @@ async function Login(req, res) {
               expiresIn: "24h"
             }
           );
-          req.auth = user.id;
-          req.username = user.username;
           const message = `L'utilisateur a été connecté avec succès`;
           res.status(200).json({ message, data: user, token, status: "200" });
         });
@@ -176,7 +174,7 @@ async function modifyImageUser(req, res) {
 
 async function deleteUser(req, res) {
   const user = await User.findOne({
-    where: { id: req.auth },
+    where: { id: req.auth.userId },
     include: { model: Post, attributes: ["imgUrl"] }
   });
   if (user.id === req.auth);

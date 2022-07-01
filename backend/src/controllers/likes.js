@@ -4,7 +4,6 @@ const Like = sequelize.models.Likes;
 
 async function findAllLikes(req, res) {
   const post = await Post.findOne({ where: { id: req.params.id } });
-  console.log(post);
   await Like.findAll({
     where: {
       PostId: post.id
@@ -24,14 +23,14 @@ async function likePost(req, res) {
   const likeObject = req.body;
   Like.findAll({
     where: {
-      UserId: req.auth,
+      UserId: req.auth.userId,
       PostId: post.id
     }
   }).then((likes) => {
     if (likes.length === 0) {
       const like = new Like({
         ...likeObject,
-        UserId: req.auth,
+        UserId: req.auth.userId,
         PostId: post.id
       });
       like
@@ -48,7 +47,7 @@ async function likePost(req, res) {
       Like.destroy({
         where: {
           PostId: post.id,
-          UserId: req.auth
+          UserId: req.auth.userId
         }
       })
         .then(() => {

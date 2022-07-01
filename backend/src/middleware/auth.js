@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
         .status(401)
         .json({ message: "L'identifiant de l'utilisateur est invalide!" });
     } else {
-      req.auth = userId;
+      req.auth = { userId: userId, isAdmin: decodedToken.admin };
       next();
     }
   });

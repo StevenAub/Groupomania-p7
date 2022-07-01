@@ -207,7 +207,7 @@ export default function DisplayAllComment() {
                 }}
               >
                 <Avatar
-                  alt={comment.User.username}
+                  alt={`photo de profil de ${comment.User.username}`}
                   style={{
                     marginRight: "10px"
                   }}

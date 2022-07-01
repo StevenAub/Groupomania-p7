@@ -62,7 +62,7 @@ export default function GetUser() {
           style={{ margin: "15px", display: "flex", alignItems: "center" }}
         >
           <Avatar
-            alt={user.username}
+            alt={`photo de profil de ${user.username}`}
             src={user.imgProfil}
             sx={{ width: 80, height: 80 }}
           />
@@ -87,7 +87,7 @@ export default function GetUser() {
             {post.UserId === userId.userId || userId.isAdmin === true ? (
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 {" "}
-                <SettingPost id={post.id} />
+                <SettingPost id={{ postId: post.id, userId: post.UserId }} />
               </div>
             ) : (
               <div></div>
@@ -99,7 +99,7 @@ export default function GetUser() {
                     component="img"
                     height="300"
                     image={post.imgUrl}
-                    alt="green iguana"
+                    alt={`photo du post ${post.title}`}
                   />{" "}
                 </Link>
               ) : (

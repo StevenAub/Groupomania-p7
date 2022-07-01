@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
-import { Redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 
 const style = {
@@ -32,7 +32,7 @@ const Input = styled("input")({
 
 export default function ModifyPost(id) {
   let navigate = useNavigate();
-
+  const admin = JSON.parse(localStorage.getItem("UserId"));
   const token = JSON.parse(localStorage.getItem("tokens"));
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -56,7 +56,7 @@ export default function ModifyPost(id) {
 
       axios({
         method: "put",
-        url: `http://localhost:8080/api/post/${id.id}`,
+        url: `http://localhost:8080/api/post/${id.id.postId}`,
 
         data: formData,
         headers: {
@@ -77,7 +77,7 @@ export default function ModifyPost(id) {
     }
     axios({
       method: "put",
-      url: `http://localhost:8080/api/post/${id.id}`,
+      url: `http://localhost:8080/api/post/${id.id.postId}`,
 
       data: post,
       headers: {
@@ -97,7 +97,11 @@ export default function ModifyPost(id) {
   return (
     <div>
       <div>
-        <Button onClick={handleOpen}>Modifier</Button>
+        {admin.isAdmin === true && admin.userId !== id.id.userId ? (
+          <div></div>
+        ) : (
+          <Button onClick={handleOpen}>Modifier</Button>
+        )}
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
